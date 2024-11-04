@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\CLS.Common\CLS.Common.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>CLS.Core</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <IntermediateOutputPath>..\..\Obj\$(Configuration)\Core</IntermediateOutputPath>
+    <OutputPath>..\..\Bin\$(Configuration)\Core</OutputPath>
+  </PropertyGroup>
+
+</Project>
