@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>CLS.Common</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IntermediateOutputPath>..\..\Obj\$(Configuration)\Common</IntermediateOutputPath>
+    <OutputPath>..\..\Bin\$(Configuration)\Conmmon</OutputPath>
+  </PropertyGroup>
+
+</Project>
