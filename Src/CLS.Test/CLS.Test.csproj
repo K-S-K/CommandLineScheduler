@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CLS.Common\CLS.Common.csproj" />
-    <ProjectReference Include="..\CLS.Core\CLS.Core.csproj" />
+    <ProjectReference Include="..\CLS.Service\CLS.Service.csproj" />
     <ProjectReference Include="..\CLS.Site\CLS.Site.csproj" />
   </ItemGroup>
 

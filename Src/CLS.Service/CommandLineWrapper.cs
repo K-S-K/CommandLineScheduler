@@ -1,5 +1,7 @@
 using System.Diagnostics;
 
+namespace CLS.Service;
+
 /// <summary>
 /// Command line wrapper for 
 /// executing command line commands.
