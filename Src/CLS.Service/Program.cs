@@ -18,14 +18,19 @@ internal class Program
         timeController.Schedule.ExecutionWindow.AlowedExecutionTimeEnd = TimeSpan.FromHours(24);
         timeController.Schedule.ExecutionWindow.MinDelayBetweenTasks = TimeSpan.FromSeconds(5);
         timeController.Schedule.ExecutionWindow.MaxDelayBetweenTasks = TimeSpan.FromSeconds(5);
+        timeController.UpdateRandomTimeDelay();
 
         app.MapGet("/", () => "Hello World!");
 
+        // Subscribe to the TimeToExecuteTask event
         timeController.TimeToExecuteTask += async (sender, e) =>
         {
-            Console.WriteLine($"Task executed at {e.Time}.");
+            Console.WriteLine($"Task executed at {e.Time:yyyy.MM.dd HH:mm:ss}.");
             await Task.Delay(1000);
         };
+
+        // Start the time controller
+        timeController.ResumeDuty();
 
         app.Run();
     }

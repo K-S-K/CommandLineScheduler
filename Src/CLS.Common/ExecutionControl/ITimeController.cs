@@ -54,5 +54,15 @@ public interface ITimeController : IDisposable
     /// Updates the schedule of the task execution.
     /// </summary>
     Task UpdateSchedule(TaskExecutionSchedule schedule);
+
+    /// <summary>
+    /// Set the random time delay 
+    /// between the task executions 
+    /// as prescribed at Schedule.
+    /// </summary>
+    /// <remarks>
+    /// TODO: This mrthod should not be called directly.
+    /// </remarks>
+    void UpdateRandomTimeDelay();
     #endregion
 }
