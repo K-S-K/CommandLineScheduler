@@ -10,8 +10,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
 
-    <IntermediateOutputPath>..\..\Obj\$(Configuration)\Core</IntermediateOutputPath>
-    <OutputPath>..\..\Bin\$(Configuration)\Core</OutputPath>
+    <IntermediateOutputPath>..\..\Obj\$(Configuration)\Service</IntermediateOutputPath>
+    <OutputPath>..\..\Bin\$(Configuration)\Service</OutputPath>
   </PropertyGroup>
 
 </Project>

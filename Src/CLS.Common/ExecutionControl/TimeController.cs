@@ -152,7 +152,10 @@ public class TimeController : ITimeController
     /// between the task executions 
     /// as prescribed at Schedule.
     /// </summary>
-    private void UpdateRandomTimeDelay()
+    /// <remarks>
+    /// TODO: Make it private.
+    /// </remarks>
+    public void UpdateRandomTimeDelay()
     {
         RandomTimeDelay = TimeSpan.FromSeconds(
             _random.Next(
@@ -271,6 +274,7 @@ public class TimeController : ITimeController
                 );
 
                 Console.WriteLine("Task executed");
+                Console.WriteLine();
             }
             catch (Exception ex)
             {
