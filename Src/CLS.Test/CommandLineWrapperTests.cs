@@ -26,7 +26,7 @@ public class CommandLineWrapperTests
         string exeFileName = SampleProgram.Deploy(deploymentDirectory);
 
         string input = Guid.NewGuid().ToString();
-        string output = CommandLineWrapper.ExecuteCommand(exeFileName, input);
+        string output = CommandLine.ExecuteCommand(exeFileName, input);
 
         Assert.Contains("Hello, World!", output);
         Assert.Contains("Task progress: 0%", output);
@@ -57,7 +57,7 @@ public class CommandLineWrapperTests
 
         // Check for the expected exception
         Assert.Throws<Exception>(
-            () => CommandLineWrapper.ExecuteCommand(exeFileName, "error")
+            () => CommandLine.ExecuteCommand(exeFileName, "error")
         );
     }
 }

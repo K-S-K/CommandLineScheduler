@@ -6,7 +6,7 @@ namespace CLS.Common.CommandControl;
 /// Command line wrapper for 
 /// executing command line commands.
 /// </summary>
-public static class CommandLineWrapper
+public static class CommandLine
 {
     public static string ExecuteCommand(string cmd, string args)
     {
