@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace CLS.Service;
+namespace CLS.Common.CommandControl;
 
 /// <summary>
 /// Command line wrapper for 
