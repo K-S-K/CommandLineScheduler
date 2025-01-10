@@ -8,8 +8,23 @@
             "name": "Chrome",
             "type": "chrome",
             "request": "launch",
-            "url": "http://localhost:3000",
+            "url": "http://localhost:5376",
             "webRoot": "${workspaceFolder}"
+        },
+        {
+            "name": "CLS.Site",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "dotnet: build",
+            "program": "${workspaceFolder}/Bin/Debug/Site/net8.0/CLS.Site.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Bin/Debug/Service/net8.0",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://*:5376",
+                "SDT_DOTNET_TOPOLOGY": "Local",
+            }
         },
         {
             "name": "CLS.Service",
@@ -27,5 +42,16 @@
             },
             "console": "internalConsole"
         }
+    ],
+    "compounds": [
+        {
+            "name": "Debug All",
+            "configurations": [
+                "CLS.Service",
+                "CLS.Site",
+                "Chrome",
+            ]
+        }
     ]
+
 }
