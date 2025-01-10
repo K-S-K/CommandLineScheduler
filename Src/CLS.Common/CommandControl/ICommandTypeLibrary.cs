@@ -7,9 +7,9 @@ namespace CLS.Common.CommandControl;
 /// The command to be executed;
 /// The directory where the command must be executed.
 /// </summary>
-public interface ICommandLibrary
+public interface ICommandTypeLibrary
 {
-    List<CommandTemplate> Items { get; }
+    IReadOnlyList<CommandTemplate> Items { get; }
     CommandTemplate GetCommand(string name);
     void AddCommand(CommandTemplate command);
 }

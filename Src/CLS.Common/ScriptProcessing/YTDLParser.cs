@@ -20,7 +20,7 @@ public class YTDLParser
     #region -> Constructors
     public YTDLParser(string output)
     {
-        ICommandLibrary commandLibrary = CommandLibrary.Default;
+        ICommandTypeLibrary commandLibrary = CommandTypeLibrary.Default;
         _commandTemplate = commandLibrary.GetCommand(cmdName)
                ?? throw new Exception($"Command {cmdName} not found in the library.");
 
