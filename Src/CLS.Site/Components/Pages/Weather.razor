@@ -1,35 +1,37 @@
 ﻿@page "/weather"
+@using CLS.Common.DTO
+@using CLS.Site.Services
 @attribute [StreamRendering]
 
-<PageTitle>Weather</PageTitle>
+@inject ICLSAPIService CLSAPIService
 
-<h1>Weather</h1>
+<PageTitle>Command queue</PageTitle>
 
-<p>This component demonstrates showing data.</p>
+<h1>Command queue</h1>
 
-@if (forecasts == null)
+@if (commands == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
     <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Args</th>
+            <th>Directory</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var command in commands.Tasks)
             {
                 <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
+                    <td>@command.Name</td>
+                    <td>@command.Arguments</td>
+                    <td>@command.Directory</td>
+                    <td>@command.Status</td>
                 </tr>
             }
         </tbody>
@@ -37,28 +39,15 @@ else
 }
 
 @code {
-    private WeatherForecast[]? forecasts;
+    private CommandTaskCollectionDto? commands;
 
     protected override async Task OnInitializedAsync()
     {
         // Simulate asynchronous loading to demonstrate streaming rendering
         await Task.Delay(500);
 
-        var startDate = DateOnly.FromDateTime(DateTime.Now);
-        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
-        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = startDate.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = summaries[Random.Shared.Next(summaries.Length)]
-        }).ToArray();
+        // Load the command list
+        commands = await CLSAPIService.RequestCommandLog();
     }
 
-    private class WeatherForecast
-    {
-        public DateOnly Date { get; set; }
-        public int TemperatureC { get; set; }
-        public string? Summary { get; set; }
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    }
 }

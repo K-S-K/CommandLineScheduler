@@ -1,3 +1,4 @@
+using CLS.Site.Services;
 using CLS.Site.Components;
 
 internal class Program
@@ -5,6 +6,10 @@ internal class Program
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        // Register ICLSControlService
+        builder.Services.AddSingleton<ICLSAPIService>(
+            new CLSAPIService("http://localhost:5375"));
 
         // Add services to the container.
         builder.Services.AddRazorComponents()
