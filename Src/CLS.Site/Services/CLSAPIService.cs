@@ -1,4 +1,5 @@
 using CLS.Common.DTO;
+using CLS.Common.RequestsAndResponces;
 
 namespace CLS.Site.Services;
 
@@ -33,10 +34,23 @@ public class CLSAPIService : ICLSAPIService
     /// </summary>
     public async Task<CommandTaskCollectionDto> RequestCommandLog()
     {
-        CommandTaskCollectionDto report =
-            await CallAPI<CommandTaskCollectionDto>(RequestType.Get, "/command-log");
+        CommandTaskCollectionDto commands =
+            await CallAPI<CommandTaskCollectionDto>(RequestType.Get, "/cmd-log");
 
-        return report;
+        return commands;
+    }
+
+    /// <summary>
+    /// Request the command to be canceled.
+    /// </summary>
+    /// <param name="id">The ID of the command to be canceled</param>
+    public async Task<bool> RequestCommandEsc(Guid id)
+    {
+        CmdCancelRequest requestData = new() { Id = id };
+        CmdCancelResponce result =
+            await CallAPI<CmdCancelResponce>(RequestType.Put, $"/cmd-esc", requestData);
+
+        return result.Success;
     }
     #endregion
 
@@ -58,8 +72,9 @@ public class CLSAPIService : ICLSAPIService
 
         try
         {
-            using HttpResponseMessage response = requestType == RequestType.Post ?
-                await client.PostAsJsonAsync(url, requestData) :
+            using HttpResponseMessage response =
+                requestType == RequestType.Post ? await client.PostAsJsonAsync(url, requestData) :
+                requestType == RequestType.Put ? await client.PutAsJsonAsync(url, requestData) :
                 await client.GetAsync(url);
 
             responseData = await response.Content.ReadFromJsonAsync<T>();

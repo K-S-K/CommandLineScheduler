@@ -1,9 +1,11 @@
+using System;
 using System.Text;
 using System.Text.Json;
 
 using CLS.Common.DTO;
 using CLS.Common.TimeControl;
 using CLS.Common.CommandControl;
+using CLS.Common.RequestsAndResponces;
 
 namespace CLS.Service;
 
@@ -50,7 +52,8 @@ internal class Program
 
 
         app.MapGet("/", () => "Hello World!");
-        app.MapGet("/command-log", GetCommandLog);  // http://localhost:5375/command-log
+        app.MapGet("/cmd-log", GetCommandLog);  // http://localhost:5375/cmd-log
+        app.MapPut("/cmd-esc", PutCommandEsc);  // http://localhost:5375/cmd-esc
 
         // Subscribe to the TimeToExecuteTask event
         timeController.TimeToExecuteTask += async (sender, e) =>
@@ -70,6 +73,7 @@ internal class Program
     /// </summary>
     /// <param name="context">The HttpContext of the request.</param>
     /// <param name="commandLog">The command log service instance from DI.</param>
+    /// <returns>the responce to the client containing the command log.</returns>
     private static async Task GetCommandLog(HttpContext context, ICommandLog commandLog)
     {
         CommandTaskCollectionDto data = new()
@@ -78,6 +82,26 @@ internal class Program
         };
 
         await PublishResponce(context, data);
+    }
+
+    /// <summary>
+    /// Cancel the command.
+    /// </summary>
+    /// <param name="context">The HttpContext of the request.</param>
+    /// <param name="request">The request data from the client.</param>
+    /// <param name="commandLog">The command log service instance from DI.</param>
+    /// <returns>the responce to the client containing the result of the operation.</returns>
+    private static async Task PutCommandEsc(HttpContext context, CmdCancelRequest request, ICommandLog commandLog)
+    {
+        bool success = commandLog.RemoveTask(request.Id);
+
+        CmdCancelResponce responce = new()
+        {
+            Id = request.Id,
+            Success = success
+        };
+
+        await PublishResponce(context, responce);
     }
 
     /// <summary>

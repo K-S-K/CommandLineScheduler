@@ -23,6 +23,12 @@ public interface ICommandLog
     void AddTasks(IEnumerable<CommandTask> tasks);
 
     /// <summary>
+    /// Remove a task from the log.
+    /// </summary>
+    /// <param name="id">The ID of the task to be removed.</param>
+    bool RemoveTask(Guid id);
+
+    /// <summary>
     /// Clear the log.
     /// </summary>
     void Clear();

@@ -1,13 +1,14 @@
-﻿@page "/weather"
+﻿@page "/cmd-log"
 @using CLS.Common.DTO
 @using CLS.Site.Services
 @attribute [StreamRendering]
 
 @inject ICLSAPIService CLSAPIService
+@rendermode InteractiveServer
 
-<PageTitle>Command queue</PageTitle>
+<PageTitle>@PageTitle</PageTitle>
 
-<h1>Command queue</h1>
+<h1>@PageTitle</h1>
 
 @if (commands == null)
 {
@@ -15,6 +16,7 @@
 }
 else
 {
+
     <table class="table">
     <thead>
         <tr>
@@ -22,6 +24,7 @@ else
             <th>Args</th>
             <th>Directory</th>
             <th>Status</th>
+            <th>X</th>
         </tr>
     </thead>
     <tbody>
@@ -32,6 +35,9 @@ else
                     <td>@command.Arguments</td>
                     <td>@command.Directory</td>
                     <td>@command.Status</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="@(async () => await CancelCommand(command.Id))">Cancel</button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -40,6 +46,8 @@ else
 
 @code {
     private CommandTaskCollectionDto? commands;
+
+    private string PageTitle { get; set; } = "Command queue";
 
     protected override async Task OnInitializedAsync()
     {
@@ -50,4 +58,15 @@ else
         commands = await CLSAPIService.RequestCommandLog();
     }
 
+    private async Task CancelCommand(Guid id)
+    {
+        PageTitle = "Cancelling command...";
+        bool success = await CLSAPIService.RequestCommandEsc(id);
+
+        if (success)
+        {
+            commands = await CLSAPIService.RequestCommandLog(); // Refresh the command list
+            StateHasChanged();
+        }
+    }
 }

@@ -19,4 +19,9 @@ public enum RequestType
     /// The GET request.
     /// </summary>
     Get,
+
+    /// <summary>
+    /// The PUT request.
+    /// </summary>
+    Put,
 }

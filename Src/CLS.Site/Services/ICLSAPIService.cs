@@ -11,4 +11,10 @@ public interface ICLSAPIService
     /// Request the command log from the API.
     /// </summary>
     Task<CommandTaskCollectionDto> RequestCommandLog();
+
+    /// <summary>
+    /// Request the command to be canceled.
+    /// </summary>
+    /// <param name="id">The ID of the command to be canceled</param>
+    Task<bool> RequestCommandEsc(Guid id);
 }

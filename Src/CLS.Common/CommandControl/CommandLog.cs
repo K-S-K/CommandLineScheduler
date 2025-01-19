@@ -34,6 +34,19 @@ public class CommandLog : ICommandLog
         => _items.AddRange(tasks);
 
     /// <summary>
+    /// Remove a task from the log.
+    /// </summary>
+    /// <param name="id">The ID of the task to be removed.</param>
+    public bool RemoveTask(Guid id)
+    {
+        CommandTask? task = _items.FirstOrDefault(t => t.Id == id);
+        if (task is not null)
+            _items.Remove(task);
+
+        return task is not null;
+    }
+
+    /// <summary>
     /// Clear the log.
     /// </summary>
     public void Clear()
