@@ -7,7 +7,7 @@ namespace CLS.Common.CommandControl;
 /// The command to be executed;
 /// The directory where the command must be executed.
 /// </summary>
-public class CommandLibrary : ICommandLibrary
+public class CommandTypeLibrary : ICommandTypeLibrary
 {
     #region -> Data
     private Dictionary<string, CommandTemplate> _commands = [];
@@ -15,16 +15,16 @@ public class CommandLibrary : ICommandLibrary
 
 
     #region -> Properties
-    public List<CommandTemplate> Items => _commands.Values.ToList();
+    public IReadOnlyList<CommandTemplate> Items => _commands.Values.ToList();
     #endregion
 
 
     #region -> Constructors
-    public static CommandLibrary Default
+    public static CommandTypeLibrary Default
     {
         get
         {
-            CommandLibrary lib = new();
+            CommandTypeLibrary lib = new();
             lib.AddCommand(new CommandTemplate("GetCurrentDirectory", "pwd", CommandRequirements.None));
             lib.AddCommand(new CommandTemplate("ListDirectoryContent", "ls -la", CommandRequirements.Directory));
             lib.AddCommand(new CommandTemplate("SetCurrentDirectory", "cd", CommandRequirements.Arguments | CommandRequirements.Directory));

@@ -1,0 +1,78 @@
+﻿@page "/cmd-log"
+@using CLS.Common.CommandControl
+@using CLS.Common.DTO
+@using CLS.Site.Services
+@attribute [StreamRendering]
+
+@inject ICLSAPIService CLSAPIService
+@rendermode InteractiveServer
+
+<PageTitle>Command queue</PageTitle>
+
+<h1>Command queue</h1>
+
+@if (commands == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Args</th>
+            <th>Directory</th>
+            <th>Status</th>
+            <th>X</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var command in commands.Tasks)
+            {
+                <tr>
+                    <td>@command.Name</td>
+                    <td>@command.Arguments</td>
+                    <td>@command.Directory</td>
+                    <td>@command.Status</td>
+                    <td>
+                        @switch (command.Status)
+                        {
+                            case CommandStatus.Pending:
+                                <button class="btn btn-primary" @onclick="@(async () => await UpdateCommandStatus(command.Id, CommandStatus.Canceled))">Cancel</button>
+                                break;
+                            case CommandStatus.Canceled:
+                            case CommandStatus.Failed:
+                                <button class="btn btn-primary" @onclick="@(async () => await UpdateCommandStatus(command.Id, CommandStatus.Pending))">Restore</button>
+                                break;
+                            default:
+                                <div></div>
+                                break;
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private CommandTaskCollectionDto? commands;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load the command list
+        commands = await CLSAPIService.RequestCommandLog();
+    }
+
+    private async Task UpdateCommandStatus(Guid id, CommandStatus status)
+    {
+        bool success = await CLSAPIService.UpdateCommandStatus(id, status);
+
+        if (success)
+        {
+            commands = await CLSAPIService.RequestCommandLog();
+            StateHasChanged();
+        }
+    }
+}
