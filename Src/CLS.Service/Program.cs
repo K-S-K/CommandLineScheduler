@@ -53,7 +53,7 @@ internal class Program
 
         app.MapGet("/", () => "Hello World!");
         app.MapGet("/cmd-log", GetCommandLog);  // http://localhost:5375/cmd-log
-        app.MapPut("/cmd-esc", PutCommandEsc);  // http://localhost:5375/cmd-esc
+        app.MapPut("/cmd-upd", PutCommandUpd);  // http://localhost:5375/cmd-esc
 
         // Subscribe to the TimeToExecuteTask event
         timeController.TimeToExecuteTask += async (sender, e) =>
@@ -85,20 +85,22 @@ internal class Program
     }
 
     /// <summary>
-    /// Cancel the command.
+    /// Update the command status.
     /// </summary>
     /// <param name="context">The HttpContext of the request.</param>
     /// <param name="request">The request data from the client.</param>
     /// <param name="commandLog">The command log service instance from DI.</param>
     /// <returns>the responce to the client containing the result of the operation.</returns>
-    private static async Task PutCommandEsc(HttpContext context, CmdCancelRequest request, ICommandLog commandLog)
+    private static async Task PutCommandUpd(HttpContext context, CmdUpdateRequest request, ICommandLog commandLog)
     {
-        bool success = commandLog.RemoveTask(request.Id);
+        bool success = commandLog.UpdateTaskStatus(request.Id, request.Status);
 
-        CmdCancelResponce responce = new()
+        CmdUpdateResponce responce = new()
         {
             Id = request.Id,
-            Success = success
+            Success = success,
+            Status = request.Status,
+            Message = success ? "Task status updated." : "Task not found."
         };
 
         await PublishResponce(context, responce);

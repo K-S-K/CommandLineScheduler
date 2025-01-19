@@ -47,6 +47,20 @@ public class CommandLog : ICommandLog
     }
 
     /// <summary>
+    /// Update the status of a task.
+    /// </summary>
+    /// <param name="id">The ID of the task to be canceled.</param>
+    /// <param name="status">The new status of the task.</param>
+    public bool UpdateTaskStatus(Guid id, CommandStatus status)
+    {
+        CommandTask? task = _items.FirstOrDefault(t => t.Id == id);
+        if (task is not null)
+            task.Status = status;
+
+        return task is not null;
+    }
+
+    /// <summary>
     /// Clear the log.
     /// </summary>
     public void Clear()

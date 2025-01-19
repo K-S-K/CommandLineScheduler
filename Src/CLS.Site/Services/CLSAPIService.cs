@@ -1,3 +1,4 @@
+using CLS.Common.CommandControl;
 using CLS.Common.DTO;
 using CLS.Common.RequestsAndResponces;
 
@@ -41,17 +42,20 @@ public class CLSAPIService : ICLSAPIService
     }
 
     /// <summary>
-    /// Request the command to be canceled.
+    /// Reqeust for the update of the command status.
     /// </summary>
     /// <param name="id">The ID of the command to be canceled</param>
-    public async Task<bool> RequestCommandEsc(Guid id)
+    /// <param name="status">The new status of the command</param>
+    /// <returns>True if the request was successful</returns>
+    public async Task<bool> UpdateCommandStatus(Guid id, CommandStatus status)
     {
-        CmdCancelRequest requestData = new() { Id = id };
-        CmdCancelResponce result =
-            await CallAPI<CmdCancelResponce>(RequestType.Put, $"/cmd-esc", requestData);
+        CmdUpdateRequest requestData = new() { Id = id, Status = status };
+        CmdUpdateResponce result =
+            await CallAPI<CmdUpdateResponce>(RequestType.Put, $"/cmd-upd", requestData);
 
         return result.Success;
     }
+
     #endregion
 
 

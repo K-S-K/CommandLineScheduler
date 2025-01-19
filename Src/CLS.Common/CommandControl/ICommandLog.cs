@@ -29,6 +29,13 @@ public interface ICommandLog
     bool RemoveTask(Guid id);
 
     /// <summary>
+    /// Update the status of a task.
+    /// </summary>
+    /// <param name="id">The ID of the task to be removed.</param>
+    /// <param name="status">The new status of the task.</param>
+    bool UpdateTaskStatus(Guid id, CommandStatus status);
+
+    /// <summary>
     /// Clear the log.
     /// </summary>
     void Clear();

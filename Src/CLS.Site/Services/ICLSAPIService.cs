@@ -1,3 +1,4 @@
+using CLS.Common.CommandControl;
 using CLS.Common.DTO;
 
 namespace CLS.Site.Services;
@@ -13,8 +14,10 @@ public interface ICLSAPIService
     Task<CommandTaskCollectionDto> RequestCommandLog();
 
     /// <summary>
-    /// Request the command to be canceled.
+    /// Reqeust for the update of the command status.
     /// </summary>
     /// <param name="id">The ID of the command to be canceled</param>
-    Task<bool> RequestCommandEsc(Guid id);
+    /// <param name="status">The new status of the command</param>
+    /// <returns>True if the request was successful</returns>
+    Task<bool> UpdateCommandStatus(Guid id, CommandStatus status);
 }

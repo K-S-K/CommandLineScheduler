@@ -1,4 +1,5 @@
 ﻿@page "/cmd-log"
+@using CLS.Common.CommandControl
 @using CLS.Common.DTO
 @using CLS.Site.Services
 @attribute [StreamRendering]
@@ -6,9 +7,9 @@
 @inject ICLSAPIService CLSAPIService
 @rendermode InteractiveServer
 
-<PageTitle>@PageTitle</PageTitle>
+<PageTitle>Command queue</PageTitle>
 
-<h1>@PageTitle</h1>
+<h1>Command queue</h1>
 
 @if (commands == null)
 {
@@ -16,7 +17,6 @@
 }
 else
 {
-
     <table class="table">
     <thead>
         <tr>
@@ -36,7 +36,19 @@ else
                     <td>@command.Directory</td>
                     <td>@command.Status</td>
                     <td>
-                        <button class="btn btn-primary" @onclick="@(async () => await CancelCommand(command.Id))">Cancel</button>
+                        @switch (command.Status)
+                        {
+                            case CommandStatus.Pending:
+                                <button class="btn btn-primary" @onclick="@(async () => await UpdateCommandStatus(command.Id, CommandStatus.Canceled))">Cancel</button>
+                                break;
+                            case CommandStatus.Canceled:
+                            case CommandStatus.Failed:
+                                <button class="btn btn-primary" @onclick="@(async () => await UpdateCommandStatus(command.Id, CommandStatus.Pending))">Restore</button>
+                                break;
+                            default:
+                                <div></div>
+                                break;
+                        }
                     </td>
                 </tr>
             }
@@ -47,25 +59,19 @@ else
 @code {
     private CommandTaskCollectionDto? commands;
 
-    private string PageTitle { get; set; } = "Command queue";
-
     protected override async Task OnInitializedAsync()
     {
-        // Simulate asynchronous loading to demonstrate streaming rendering
-        await Task.Delay(500);
-
         // Load the command list
         commands = await CLSAPIService.RequestCommandLog();
     }
 
-    private async Task CancelCommand(Guid id)
+    private async Task UpdateCommandStatus(Guid id, CommandStatus status)
     {
-        PageTitle = "Cancelling command...";
-        bool success = await CLSAPIService.RequestCommandEsc(id);
+        bool success = await CLSAPIService.UpdateCommandStatus(id, status);
 
         if (success)
         {
-            commands = await CLSAPIService.RequestCommandLog(); // Refresh the command list
+            commands = await CLSAPIService.RequestCommandLog();
             StateHasChanged();
         }
     }
