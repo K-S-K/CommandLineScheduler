@@ -1,4 +1,5 @@
 using CLS.Common.CommandControl;
+using CLS.Common.CommandLibrary;
 
 namespace CLS.Common.ScriptProcessing;
 
@@ -8,8 +9,8 @@ namespace CLS.Common.ScriptProcessing;
 public class YTDLParser
 {
     #region -> Fields
-    private string cmdName = "DownloadFromYoutube";
-    private string cmdWord = "yt-dlp";
+    private const string cmdName = "DownloadFromYoutube";
+    private const string cmdWord = "yt-dlp";
     #endregion
 
 
@@ -20,7 +21,7 @@ public class YTDLParser
     #region -> Constructors
     public YTDLParser(string output)
     {
-        ICommandTypeLibrary commandLibrary = CommandTypeLibrary.Default;
+        ICommandTemplateLibrary commandLibrary = CommandTemplateLibrary.Default;
 
         Input = output;
     }

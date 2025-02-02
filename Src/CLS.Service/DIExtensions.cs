@@ -1,6 +1,7 @@
 using CLS.Common.Times;
 using CLS.Common.TimeControl;
 using CLS.Common.CommandControl;
+using CLS.Common.CommandLibrary;
 
 namespace CLS.Service;
 
@@ -21,7 +22,7 @@ public static class DIExtensions
         });
 
         // Add ICommandTypeLibrary implementation
-        services.AddSingleton<ICommandTypeLibrary, CommandTypeLibrary>();
+        services.AddSingleton<ICommandTemplateLibrary, CommandTemplateLibrary>();
 
         // Add ICommandLog implementation
         services.AddSingleton<ICommandLog, CommandLog>();
