@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+
 using CLS.Common.CommandControl;
 
 namespace CLS.Common.DTO;
@@ -8,19 +9,16 @@ namespace CLS.Common.DTO;
 /// </summary>
 public class CommandTaskDto
 {
-    #region -> CommandTemplate Properties
+    #region -> CommandTask Properties
+    public Guid Id { get; init; }
+    public required string Name { get; init; }
+    public required string Command { get; init; }
+
     public required string Directory { get; init; }
     public required string Arguments { get; init; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public CommandStatus Status { get; set; } = CommandStatus.Pending;
-    #endregion
-
-
-    #region -> CommandTask Properties
-    public Guid Id { get; init; }
-    public required string Name { get; init; }
-    public required string Command { get; init; }
     #endregion
 
 
@@ -48,7 +46,9 @@ public static class CommandTaskDtoExtensions
 
     public static CommandTask ToCommandTask(this CommandTaskDto dto)
     {
-        return new CommandTask(dto.Name, dto.Command,
+        return new CommandTask(
+            dto.Name,
+            dto.Command,
             dto.Directory,
             dto.Arguments)
         {

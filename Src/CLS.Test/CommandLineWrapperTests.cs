@@ -1,4 +1,4 @@
-using CLS.Common.CommandControl;
+using CLS.Common.ExecutionControl;
 
 namespace CLS.Test;
 
@@ -26,7 +26,7 @@ public class CommandLineWrapperTests
         string exeFileName = SampleProgram.Deploy(deploymentDirectory);
 
         string input = Guid.NewGuid().ToString();
-        string output = CommandLine.ExecuteCommand(exeFileName, input);
+        string output = CommandLineWrapper.ExecuteCommand(exeFileName, input);
 
         Assert.Contains("Hello, World!", output);
         Assert.Contains("Task progress: 0%", output);
@@ -57,7 +57,7 @@ public class CommandLineWrapperTests
 
         // Check for the expected exception
         Assert.Throws<Exception>(
-            () => CommandLine.ExecuteCommand(exeFileName, "error")
+            () => CommandLineWrapper.ExecuteCommand(exeFileName, "error")
         );
     }
 }
