@@ -12,20 +12,29 @@ public static class DIExtensions
         // Add ICurrentTimeProvider implementation
         services.AddSingleton<ICurrentTimeProvider, CurrentTimeProvider>();
 
+        // Add ICommandTypeLibrary implementation
+        services.AddSingleton<ICommandTemplateLibrary, CommandTemplateLibrary>();
+
         // Add ITimeController implementation provided with ICurentTimeProvider instance registered above
         services.AddSingleton<ITimeController, TimeController>(serviceProvider =>
         {
             ICurrentTimeProvider currentTimeProvider =
                 serviceProvider.GetRequiredService<ICurrentTimeProvider>();
 
-            return new TimeController(currentTimeProvider);
+            ILogger logger =
+                serviceProvider.GetRequiredService<ILogger<TimeController>>();
+
+            return new TimeController(currentTimeProvider, logger);
         });
 
-        // Add ICommandTypeLibrary implementation
-        services.AddSingleton<ICommandTemplateLibrary, CommandTemplateLibrary>();
-
         // Add ICommandLog implementation
-        services.AddSingleton<ICommandLog, CommandLog>();
+        services.AddSingleton<ICommandLog, CommandLog>(serviceProvider =>
+        {
+            ILogger logger =
+                serviceProvider.GetRequiredService<ILogger<CommandLog>>();
+
+            return new CommandLog(logger);
+        });
 
         return services;
     }
