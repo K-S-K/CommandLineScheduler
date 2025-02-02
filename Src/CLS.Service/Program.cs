@@ -95,7 +95,7 @@ internal class Program
     {
         bool success = commandLog.UpdateTaskStatus(request.Id, request.Status);
 
-        CmdUpdateResponce responce = new()
+        CmdRelatedResponce responce = new()
         {
             Id = request.Id,
             Success = success,

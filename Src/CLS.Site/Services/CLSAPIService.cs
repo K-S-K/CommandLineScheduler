@@ -50,8 +50,8 @@ public class CLSAPIService : ICLSAPIService
     public async Task<bool> UpdateCommandStatus(Guid id, CommandStatus status)
     {
         CmdUpdateRequest requestData = new() { Id = id, Status = status };
-        CmdUpdateResponce result =
-            await CallAPI<CmdUpdateResponce>(RequestType.Put, $"/cmd-upd", requestData);
+        CmdRelatedResponce result =
+            await CallAPI<CmdRelatedResponce>(RequestType.Put, $"/cmd-upd", requestData);
 
         return result.Success;
     }
