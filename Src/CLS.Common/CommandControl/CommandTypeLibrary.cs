@@ -25,17 +25,17 @@ public class CommandTypeLibrary : ICommandTypeLibrary
         get
         {
             CommandTypeLibrary lib = new();
-            lib.AddCommand(new CommandTemplate("GetCurrentDirectory", "pwd", CommandRequirements.None));
-            lib.AddCommand(new CommandTemplate("ListDirectoryContent", "ls -la", CommandRequirements.Directory));
-            lib.AddCommand(new CommandTemplate("SetCurrentDirectory", "cd", CommandRequirements.Arguments | CommandRequirements.Directory));
-            lib.AddCommand(new CommandTemplate("CreateDirectory", "mkdir", CommandRequirements.Arguments | CommandRequirements.Directory));
-            lib.AddCommand(new CommandTemplate("Remove Directory", "rmdir", CommandRequirements.Directory));
-            lib.AddCommand(new CommandTemplate("DownloadFromYoutube", "yt-dlp", CommandRequirements.Arguments | CommandRequirements.Directory));
-            lib.AddCommand(new CommandTemplate("Copy", "cp", CommandRequirements.Directory | CommandRequirements.Arguments));
-            lib.AddCommand(new CommandTemplate("Move", "mv", CommandRequirements.Directory | CommandRequirements.Arguments));
-            lib.AddCommand(new CommandTemplate("Remove", "rm", CommandRequirements.Directory));
-            lib.AddCommand(new CommandTemplate("Rename", "ren", CommandRequirements.Directory | CommandRequirements.Arguments));
-            lib.AddCommand(new CommandTemplate("Execute", "exec", CommandRequirements.Arguments | CommandRequirements.Directory));
+            lib.AddCommand(new CommandTemplate("GetCurrentDirectory", "pwd"));
+            lib.AddCommand(new CommandTemplate("ListDirectoryContent", "ls -la"));
+            lib.AddCommand(new CommandTemplate("SetCurrentDirectory", "cd"));
+            lib.AddCommand(new CommandTemplate("CreateDirectory", "mkdir"));
+            lib.AddCommand(new CommandTemplate("Remove Directory", "rmdir"));
+            lib.AddCommand(new CommandTemplate("DownloadFromYoutube", "yt-dlp"));
+            lib.AddCommand(new CommandTemplate("Copy", "cp"));
+            lib.AddCommand(new CommandTemplate("Move", "mv"));
+            lib.AddCommand(new CommandTemplate("Remove", "rm"));
+            lib.AddCommand(new CommandTemplate("Rename", "ren"));
+            lib.AddCommand(new CommandTemplate("Execute", "exec"));
             return lib;
         }
     }

@@ -12,16 +12,14 @@ public record CommandTemplate
     #region -> Properties
     public string Name { get; init; }
     public string Command { get; init; }
-    public CommandRequirements Requirements { get; init; }  
     #endregion
 
 
     #region -> Constructors
-    public CommandTemplate(string name, string command, CommandRequirements requirements)
+    public CommandTemplate(string name, string command)
     {
         Name = name;
         Command = command;
-        Requirements = requirements;
     }
 
     public CommandTemplate()
@@ -34,9 +32,8 @@ public record CommandTemplate
 
     #region -> Methods
     public CommandTemplate WithCommandOnly(
-        string name, string command, 
-        CommandRequirements requirements)
-        => new(name, command, requirements);
+        string name, string command)
+        => new(name, command);
 
     public override string ToString()
         => $"{Name} ({Command})";

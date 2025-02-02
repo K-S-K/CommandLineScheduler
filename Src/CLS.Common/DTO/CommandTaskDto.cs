@@ -21,9 +21,6 @@ public class CommandTaskDto
     public Guid Id { get; init; }
     public required string Name { get; init; }
     public required string Command { get; init; }
-
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public CommandRequirements Requirements { get; init; }
     #endregion
 
 
@@ -43,7 +40,6 @@ public static class CommandTaskDtoExtensions
             Id = commandTask.Id,
             Name = commandTask.Name,
             Command = commandTask.Command,
-            Requirements = commandTask.Requirements,
             Directory = commandTask.Directory,
             Arguments = commandTask.Arguments,
             Status = commandTask.Status
@@ -53,7 +49,7 @@ public static class CommandTaskDtoExtensions
     public static CommandTask ToCommandTask(this CommandTaskDto dto)
     {
         return new CommandTask(
-            new CommandTemplate(dto.Name, dto.Command, dto.Requirements),
+            new CommandTemplate(dto.Name, dto.Command),
             dto.Directory,
             dto.Arguments)
         {

@@ -31,8 +31,7 @@ public record CommandTask : CommandTemplate
 
     #region -> Constructors
     public CommandTask(CommandTemplate commandTemplate, string directory, string arguments)
-        : base(commandTemplate.Name, commandTemplate.Command,
-                CommandRequirements.Arguments | CommandRequirements.Directory)
+        : base(commandTemplate.Name, commandTemplate.Command)
     {
         Id = Guid.NewGuid();
         Directory = directory;
@@ -40,13 +39,8 @@ public record CommandTask : CommandTemplate
     }
 
     public CommandTask(CommandTemplate commandTemplate, string directory)
-        : base(commandTemplate.Name, commandTemplate.Command,
-                CommandRequirements.Directory)
+        : base(commandTemplate.Name, commandTemplate.Command)
     {
-        // Check if the command requires arguments.
-        if (commandTemplate.Requirements.HasFlag(CommandRequirements.Arguments))
-            throw new ArgumentException("The command requires arguments.");
-
         Id = Guid.NewGuid();
 
         Directory = directory;
@@ -54,17 +48,8 @@ public record CommandTask : CommandTemplate
     }
 
     public CommandTask(CommandTemplate commandTemplate)
-        : base(commandTemplate.Name, commandTemplate.Command,
-                CommandRequirements.None)
+        : base(commandTemplate.Name, commandTemplate.Command)
     {
-        // Check if the command requires arguments.
-        if (commandTemplate.Requirements.HasFlag(CommandRequirements.Arguments))
-            throw new ArgumentException("The command requires arguments.");
-
-        // Check if the command requires a directory.
-        if (commandTemplate.Requirements.HasFlag(CommandRequirements.Directory))
-            throw new ArgumentException("The command requires a directory.");
-
         Id = Guid.NewGuid();
 
         Directory = string.Empty;
