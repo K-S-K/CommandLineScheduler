@@ -48,8 +48,7 @@ public static class CommandTaskDtoExtensions
 
     public static CommandTask ToCommandTask(this CommandTaskDto dto)
     {
-        return new CommandTask(
-            new CommandTemplate(dto.Name, dto.Command),
+        return new CommandTask(dto.Name, dto.Command,
             dto.Directory,
             dto.Arguments)
         {
