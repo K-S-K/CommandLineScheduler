@@ -15,6 +15,9 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Logging.ClearProviders();
+        builder.Logging.AddConsole();
+
         builder.Services.AddServices();
 
         var app = builder.Build();
@@ -95,7 +98,7 @@ internal class Program
     {
         bool success = commandLog.UpdateTaskStatus(request.Id, request.Status);
 
-        CmdUpdateResponce responce = new()
+        CmdRelatedResponce responce = new()
         {
             Id = request.Id,
             Success = success,

@@ -1,4 +1,5 @@
 using CLS.Common.CommandControl;
+using CLS.Common.CommandLibrary;
 
 namespace CLS.Common.ScriptProcessing;
 
@@ -8,8 +9,8 @@ namespace CLS.Common.ScriptProcessing;
 public class YTDLParser
 {
     #region -> Fields
-    private CommandTemplate _commandTemplate = null!;
-    private string cmdName = "DownloadFromYoutube";
+    private const string cmdName = "DownloadFromYoutube";
+    private const string cmdWord = "yt-dlp";
     #endregion
 
 
@@ -20,9 +21,7 @@ public class YTDLParser
     #region -> Constructors
     public YTDLParser(string output)
     {
-        ICommandTypeLibrary commandLibrary = CommandTypeLibrary.Default;
-        _commandTemplate = commandLibrary.GetCommand(cmdName)
-               ?? throw new Exception($"Command {cmdName} not found in the library.");
+        ICommandTemplateLibrary commandLibrary = CommandTemplateLibrary.Default;
 
         Input = output;
     }
@@ -50,7 +49,7 @@ public class YTDLParser
         List<string> urls = GetVideoUrls();
         foreach (string url in urls)
         {
-            CommandTask task = new(_commandTemplate, directory, url);
+            CommandTask task = new(cmdName, cmdWord, directory, url);
             tasks.Add(task);
         }
         return tasks;

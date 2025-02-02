@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 namespace CLS.Common.CommandControl;
 
 
@@ -7,7 +9,27 @@ namespace CLS.Common.CommandControl;
 public class CommandLog : ICommandLog
 {
     #region -> Fields
+    /// <summary>
+    /// The optional logger.
+    /// </summary>
+    private readonly ILogger? _logger;
+
+    /// <summary>
+    /// The list of tasks.
+    /// </summary>
     private readonly List<CommandTask> _items = [];
+    #endregion
+
+
+    #region -> Constructors
+    /// <summary>
+    /// The log of commands
+    /// </summary>
+    /// <param name="logger">The optional logger.</param>
+    public CommandLog(ILogger? logger = null)
+    {
+        _logger = logger;
+    }
     #endregion
 
 
@@ -18,20 +40,29 @@ public class CommandLog : ICommandLog
     public IReadOnlyList<CommandTask> Items => _items;
     #endregion
 
+
     #region -> Methods
     /// <summary>
     /// Add a single task to the log.
     /// </summary>
     /// <param name="task">The task to be added.</param>
     public void AddTask(CommandTask task)
-        => _items.Add(task);
+    {
+        _items.Add(task);
+
+        LogInformation($"Task {task.Id} added.");
+    }
 
     /// <summary>
     /// Add a list of tasks to the log.
     /// </summary>
     /// <param name="tasks">The tasks to be added.</param>
     public void AddTasks(IEnumerable<CommandTask> tasks)
-        => _items.AddRange(tasks);
+    {
+        _items.AddRange(tasks);
+
+        LogInformation($"{tasks.Count()} tasks added.");
+    }
 
     /// <summary>
     /// Remove a task from the log.
@@ -39,9 +70,19 @@ public class CommandLog : ICommandLog
     /// <param name="id">The ID of the task to be removed.</param>
     public bool RemoveTask(Guid id)
     {
-        CommandTask? task = _items.FirstOrDefault(t => t.Id == id);
-        if (task is not null)
+        CommandTask? task =
+            _items.FirstOrDefault(t => t.Id == id);
+
+        if (task is null)
+        {
+            LogInformation($"Task {id} not found.");
+        }
+        else
+        {
             _items.Remove(task);
+
+            LogInformation($"Task {task.Id} removed.");
+        }
 
         return task is not null;
     }
@@ -65,5 +106,17 @@ public class CommandLog : ICommandLog
     /// </summary>
     public void Clear()
         => _items.Clear();
+    #endregion
+
+
+    #region -> Implementations
+    /// <summary>
+    /// Logs the information.
+    /// </summary>
+    private void LogInformation(string message)
+    {
+        Console.WriteLine(message);
+        _logger?.LogInformation(message);
+    }
     #endregion
 }

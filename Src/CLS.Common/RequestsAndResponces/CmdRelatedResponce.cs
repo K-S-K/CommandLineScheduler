@@ -3,9 +3,9 @@ using CLS.Common.CommandControl;
 namespace CLS.Common.RequestsAndResponces;
 
 /// <summary>
-/// The responce to a command cancel request.
+/// The responce to a command modification request.
 /// </summary>
-public class CmdUpdateResponce
+public class CmdRelatedResponce
 {
     /// <summary>
     /// The ID of the command.
@@ -26,5 +26,4 @@ public class CmdUpdateResponce
     /// The new status of the command.
     /// </summary>
     public CommandStatus Status { get; set; }
-
 }

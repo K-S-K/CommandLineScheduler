@@ -1,4 +1,5 @@
 using CLS.Common.Times;
+using Microsoft.Extensions.Logging;
 
 namespace CLS.Common.TimeControl;
 
@@ -8,6 +9,14 @@ namespace CLS.Common.TimeControl;
 /// <seealso cref="ITimeController" />
 public class TimeController : ITimeController
 {
+    #region -> Fields
+    /// <summary>
+    /// The optional logger.
+    /// </summary>
+    private readonly ILogger? _logger;
+    #endregion
+
+
     #region -> Events
     /// <summary>
     /// Occurs when the time for the next task execution is reached.
@@ -76,8 +85,14 @@ public class TimeController : ITimeController
 
 
     #region -> Constructors
-    public TimeController(ICurrentTimeProvider currentTimeProvider)
+    /// <summary>
+    /// The <see cref="TimeController"/>.
+    /// </summary>
+    /// <param name="currentTimeProvider">The current time provider.</param>
+    /// <param name="logger">The optional logger.</param>
+    public TimeController(ICurrentTimeProvider currentTimeProvider, ILogger? logger = null)
     {
+        _logger = logger;
         _currentTimeProvider = currentTimeProvider;
 
         Schedule = TaskExecutionSchedule.Allways;
@@ -110,6 +125,9 @@ public class TimeController : ITimeController
         // Pause the time controller.
         ControllerStatus = TimeControllerStatus.Paused;
 
+        // Log the information.
+        LogInformation("Time Controller paused.");
+
         // Exit the critical section.
         _lock.Release();
     }
@@ -122,6 +140,9 @@ public class TimeController : ITimeController
         // Resume the time controller.
         ControllerStatus = TimeControllerStatus.Running;
 
+        // Log the information.
+        LogInformation("Time Controller resumed.");
+
         // Exit the critical section.
         _lock.Release();
     }
@@ -133,6 +154,9 @@ public class TimeController : ITimeController
 
         // Update the schedule.
         Schedule = schedule;
+
+        // Log the information.
+        LogInformation("Time Controller Schedule updated.");
 
         // Exit the critical section.
         _lock.Release();
@@ -157,12 +181,26 @@ public class TimeController : ITimeController
     /// </remarks>
     public void UpdateRandomTimeDelay()
     {
+        int minDelay = (int)Schedule.ExecutionWindow.MinDelayBetweenTasks.TotalSeconds;
+        int maxDelay = (int)Schedule.ExecutionWindow.MaxDelayBetweenTasks.TotalSeconds;
         RandomTimeDelay = TimeSpan.FromSeconds(
             _random.Next(
-                (int)Schedule.ExecutionWindow.MinDelayBetweenTasks.TotalSeconds,
-                (int)Schedule.ExecutionWindow.MaxDelayBetweenTasks.TotalSeconds
+                minDelay,
+                maxDelay
             )
         );
+
+        // Log new random time delay as HHHH:MM:SS
+        LogInformation($"Random time delay: {RandomTimeDelay:hh\\:mm\\:ss}");
+    }
+
+    /// <summary>
+    /// Logs the information.
+    /// </summary>
+    private void LogInformation(string message)
+    {
+        Console.WriteLine(message);
+        _logger?.LogInformation(message);
     }
 
     /// <summary>
@@ -263,7 +301,7 @@ public class TimeController : ITimeController
         {
             try
             {
-                Console.WriteLine("Time to execute task.");
+                LogInformation("Time to execute task.");
 
                 // Notify user code about the time to execute the task.
                 TimeToExecuteTask?.Invoke(this,
@@ -273,7 +311,7 @@ public class TimeController : ITimeController
                     }
                 );
 
-                Console.WriteLine("Task executed");
+                LogInformation("Task executed");
                 Console.WriteLine();
             }
             catch (Exception ex)
