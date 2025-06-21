@@ -56,6 +56,18 @@ public class CLSAPIService : ICLSAPIService
         return result.Success;
     }
 
+    /// <summary>
+    /// Set the queue status in the API.
+    /// </summary>
+    /// <param name="cmnd">The command to set the queue status</param>
+    public async Task<bool> SetQueueStatus(DutyControlCommandType cmnd)
+    {
+        CmdDutyControl requestData = new() { Command = cmnd };
+        CmdRelatedResponce result =
+            await CallAPI<CmdRelatedResponce>(RequestType.Put, $"/queue-control", requestData);
+
+        return result.Success;
+    }
     #endregion
 
 

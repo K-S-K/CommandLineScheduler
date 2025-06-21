@@ -1,5 +1,6 @@
-using CLS.Common.CommandControl;
 using CLS.Common.DTO;
+using CLS.Common.CommandControl;
+using CLS.Common.RequestsAndResponces;
 
 namespace CLS.Site.Services;
 
@@ -20,4 +21,10 @@ public interface ICLSAPIService
     /// <param name="status">The new status of the command</param>
     /// <returns>True if the request was successful</returns>
     Task<bool> UpdateCommandStatus(Guid id, CommandStatus status);
+
+    /// <summary>
+    /// Set the queue status in the API.
+    /// </summary>
+    /// <param name="cmnd">The command to set the queue status</param>
+    Task<bool> SetQueueStatus(DutyControlCommandType cmnd);
 }
