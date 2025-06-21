@@ -39,4 +39,11 @@ public interface ICommandLog
     /// Clear the log.
     /// </summary>
     void Clear();
+
+    /// <summary>
+    /// Get the next available task from the log.
+    /// </summary>
+    /// <param name="task">The next available task.</param>
+    /// <returns>True if the task was found, otherwise false.</returns>
+    bool GetNextAvailableTask(out CommandTask? task);
 }

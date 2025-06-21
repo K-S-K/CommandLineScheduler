@@ -65,6 +65,19 @@ public class CommandLog : ICommandLog
     }
 
     /// <summary>
+    /// Get the next available task from the log.
+    /// </summary>
+    /// <param name="task">The next available task.</param>
+    /// <returns>True if the task was found, otherwise false.</returns>
+    public bool GetNextAvailableTask(out CommandTask? task)
+    {
+        task =
+            _items.FirstOrDefault(t => t.Status == CommandStatus.Pending);
+
+        return task is not null;
+    }
+
+    /// <summary>
     /// Remove a task from the log.
     /// </summary>
     /// <param name="id">The ID of the task to be removed.</param>
