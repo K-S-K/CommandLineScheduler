@@ -1,7 +1,8 @@
 ﻿@page "/cmd-log"
-@using CLS.Common.CommandControl
 @using CLS.Common.DTO
 @using CLS.Site.Services
+@using CLS.Common.CommandControl
+@using CLS.Common.RequestsAndResponces
 @attribute [StreamRendering]
 
 @inject ICLSAPIService CLSAPIService
@@ -17,21 +18,25 @@
 }
 else
 {
+
+    <div class="mb-3">
+        <button class="btn btn-primary" @onclick="PauseQueue">Pause Queue</button>
+        <button class="btn btn-primary" @onclick="ResumeQueue">Resume Queue</button>
+    </div>
+
     <table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Args</th>
-            <th>Directory</th>
-            <th>Status</th>
-            <th>X</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var command in commands.Tasks)
+        <thead>
+            <tr>
+                <th>Args</th>
+                <th>Directory</th>
+                <th>Status</th>
+                <th>X</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var command in commands.Tasks)
             {
                 <tr>
-                    <td>@command.Name</td>
                     <td>@command.Arguments</td>
                     <td>@command.Directory</td>
                     <td>@command.Status</td>
@@ -39,11 +44,13 @@ else
                         @switch (command.Status)
                         {
                             case CommandStatus.Pending:
-                                <button class="btn btn-primary" @onclick="@(async () => await UpdateCommandStatus(command.Id, CommandStatus.Canceled))">Cancel</button>
+                                <button class="btn btn-primary"
+                                    @onclick="@(async () => await UpdateCommandStatus(command.Id, CommandStatus.Canceled))">Cancel</button>
                                 break;
                             case CommandStatus.Canceled:
                             case CommandStatus.Failed:
-                                <button class="btn btn-primary" @onclick="@(async () => await UpdateCommandStatus(command.Id, CommandStatus.Pending))">Restore</button>
+                                <button class="btn btn-primary"
+                                    @onclick="@(async () => await UpdateCommandStatus(command.Id, CommandStatus.Pending))">Restore</button>
                                 break;
                             default:
                                 <div></div>
@@ -74,5 +81,17 @@ else
             commands = await CLSAPIService.RequestCommandLog();
             StateHasChanged();
         }
+    }
+
+    private async Task PauseQueue()
+    {
+        bool success = await CLSAPIService.SetQueueStatus(DutyControlCommandType.CompleteCurrentAndDisableQueue);
+        StateHasChanged();
+    }
+
+    private async Task ResumeQueue()
+    {
+        bool success = await CLSAPIService.SetQueueStatus(DutyControlCommandType.EnableQueue);
+        StateHasChanged();
     }
 }

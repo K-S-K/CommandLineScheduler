@@ -57,6 +57,7 @@ internal class Program
         app.MapGet("/", () => "Hello World!");
         app.MapGet("/cmd-log", GetCommandLog);  // http://localhost:5375/cmd-log
         app.MapPut("/cmd-upd", PutCommandUpd);  // http://localhost:5375/cmd-esc
+        app.MapPut("/queue-control", PutDutyControl); // http://localhost:5375/duty-control
 
         // Subscribe to the TimeToExecuteTask event
         timeController.TimeToExecuteTask += async (sender, e) =>
@@ -125,5 +126,28 @@ internal class Program
         string responceStr = JsonSerializer.Serialize(data);
 
         await context.Response.WriteAsync(responceStr);
+    }
+
+    /// <summary>
+    /// Set the duty control status.
+    /// </summary>
+    private static async Task PutDutyControl(HttpContext context, CmdDutyControl request, ITimeController timeController)
+    {
+        if (request is null)
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            return;
+        }
+
+        if (request.Command == DutyControlCommandType.EnableQueue)
+        {
+            await timeController.ResumeDuty();
+        }
+        else
+        {
+            await timeController.PauseDuty();
+        }
+
+        await PublishResponce(context, new { Success = true, Message = "Duty control updated." });
     }
 }
