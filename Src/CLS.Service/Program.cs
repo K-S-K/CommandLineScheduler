@@ -11,6 +11,11 @@ namespace CLS.Service;
 
 internal class Program
 {
+    /// <summary>
+    /// The command log service instance.
+    /// </summary>
+    private static ICommandLog? cmdLog;
+
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
@@ -31,7 +36,7 @@ internal class Program
         timeController.UpdateRandomTimeDelay();
 
         // Get ICommandLog instance
-        ICommandLog cmdLog = app.Services.GetRequiredService<ICommandLog>();
+        cmdLog = app.Services.GetRequiredService<ICommandLog>();
 
 
         // Prepare temporary content
@@ -60,16 +65,49 @@ internal class Program
         app.MapPut("/queue-control", PutDutyControl); // http://localhost:5375/duty-control
 
         // Subscribe to the TimeToExecuteTask event
-        timeController.TimeToExecuteTask += async (sender, e) =>
-        {
-            Console.WriteLine($"Task executed at {e.Time:yyyy.MM.dd HH:mm:ss}.");
-            await Task.Delay(1000);
-        };
+        timeController.TimeToExecuteTask += ExecuteNextTask;
 
         // Start the time controller
         timeController.ResumeDuty();
 
         app.Run();
+    }
+
+    private static void ExecuteNextTask(object? sender, TimeToExecuteTaskEventArgs args)
+    {
+        if (cmdLog == null)
+        {
+            Console.WriteLine("Command log service not found.");
+            return;
+        }
+
+        if (!cmdLog.GetNextAvailableTask(out CommandTask? nextTask) || nextTask == null)
+        {
+            Console.WriteLine("No tasks available for execution.");
+            return;
+        }
+
+        // Execute the task
+        cmdLog.UpdateTaskStatus(nextTask.Id, CommandStatus.Running);
+        Console.WriteLine($"Executing task {nextTask.Id} at {DateTime.Now:yyyy.MM.dd HH:mm:ss}.");
+
+        try
+        {
+            // Simulate task execution (should be async in real scenario)
+            Task.Delay(1000).Wait();
+
+            // TODO: Implement the actual task execution logic here
+            // nextTask.Execute();
+
+            // Mark the task as completed
+            cmdLog.UpdateTaskStatus(nextTask.Id, CommandStatus.Completed);
+        }
+        catch (Exception ex)
+        {
+            // Mark the task as failed
+            cmdLog.UpdateTaskStatus(nextTask.Id, CommandStatus.Failed);
+            Console.WriteLine($"Error executing task {nextTask.Id}: {ex.Message}");
+        }
     }
 
     /// <summary>
