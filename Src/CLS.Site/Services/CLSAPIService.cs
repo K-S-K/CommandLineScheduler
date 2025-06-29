@@ -1,5 +1,5 @@
-using CLS.Common.CommandControl;
 using CLS.Common.DTO;
+using CLS.Common.CommandControl;
 using CLS.Common.RequestsAndResponces;
 
 namespace CLS.Site.Services;
@@ -7,8 +7,16 @@ namespace CLS.Site.Services;
 /// <summary>
 /// The service to communicate with the CLS control API.
 /// </summary>
-public class CLSAPIService : ICLSAPIService
+public class CLSAPIService : BackgroundService, ICLSAPIService
 {
+    #region -> Events
+    /// <summary>
+    /// The event that is raised when the command log is updated.
+    /// </summary>
+    public event Action? OnUpdated;
+    #endregion
+
+
     #region -> Private Fields
     /// <summary>
     /// The URL of the API server
@@ -26,6 +34,14 @@ public class CLSAPIService : ICLSAPIService
     {
         _apiURL = apiURL;
     }
+    #endregion
+
+
+    #region -> Public Properties
+    /// <summary>
+    /// The List of command tasks.
+    /// </summary>
+    public List<CommandTaskDto> Items { get; private set; } = [];
     #endregion
 
 
@@ -104,6 +120,46 @@ public class CLSAPIService : ICLSAPIService
         responseData ??= new T();
 
         return responseData;
+    }
+
+    /// <summary>
+    /// The method that is called when the service is started.
+    /// </summary>
+    /// <param name="stoppingToken">The token to monitor for cancellation requests</param
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            await RequestUpdatedItems();
+
+            await Task.Delay(TimeSpan.FromMilliseconds(500), stoppingToken);
+        }
+    }
+
+    /// <summary>
+    /// Request the updated items from the API.
+    /// </summary>
+    private async Task RequestUpdatedItems()
+    {
+        CommandTaskCollectionDto updatedCommands =
+            await CallAPI<CommandTaskCollectionDto>(RequestType.Get, "/cmd-mru");
+
+        List<CommandTaskDto> items = updatedCommands.Tasks.ToList();
+
+        if (items.Count > 0)
+        {
+            UpdateItems(items);
+        }
+    }
+
+    /// <summary>
+    /// Update the items in the service.
+    /// </summary>
+    /// <param name="updatedItems">The list of updated items</param>
+    private void UpdateItems(List<CommandTaskDto> updatedItems)
+    {
+        Items = updatedItems;
+        OnUpdated?.Invoke();
     }
     #endregion
 }

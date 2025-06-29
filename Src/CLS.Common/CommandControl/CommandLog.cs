@@ -20,6 +20,12 @@ public class CommandLog : ICommandLog
     private readonly List<CommandTask> _items = [];
 
     /// <summary>
+    /// The set of updated task IDs.
+    /// This is used to track which tasks have been updated.
+    /// </summary>
+    private readonly HashSet<Guid> _updatedTaskIds = [];
+
+    /// <summary>
     /// The semaphore to control multithreading access to the class members.
     /// </summary>
     private readonly SemaphoreSlim _semaphore = new(1, 1);
@@ -171,6 +177,35 @@ public class CommandLog : ICommandLog
         try
         {
             _items.Clear();
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
+    }
+
+    /// <summary>
+    /// Get the list of recently updated items.
+    /// </summary>
+    /// <returns>A read-only list of recently updated items.</returns>
+    /// <remarks>
+    /// This method returns a list of tasks that have been updated recently.
+    /// The list is cleared after each call to this method.
+    /// </remarks>
+    public IReadOnlyList<CommandTask> GetRecentlyUpdatedItems()
+    {
+        _semaphore.Wait();
+        try
+        {
+            // Prepare the copy of the updated task IDs
+            List<CommandTask> _updatedTasks = _items
+                .Where(t => _updatedTaskIds.Contains(t.Id))
+                .ToList();
+
+            // Clear the updated task IDs after retrieving the tasks
+            _updatedTaskIds.Clear();
+
+            return _updatedTasks;
         }
         finally
         {

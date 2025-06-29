@@ -62,6 +62,7 @@ internal class Program
         app.MapGet("/", () => "Hello World!");
         app.MapGet("/cmd-log", GetCommandLog);  // http://localhost:5375/cmd-log
         app.MapPut("/cmd-upd", PutCommandUpd);  // http://localhost:5375/cmd-esc
+        app.MapGet("/cmd-mru", GetCommandMru); // http://localhost:5375/cmd-mru
         app.MapPut("/queue-control", PutDutyControl); // http://localhost:5375/duty-control
 
         // Subscribe to the TimeToExecuteTask event
@@ -146,6 +147,27 @@ internal class Program
         };
 
         await PublishResponce(context, responce);
+    }
+
+
+    /// <summary>
+    /// Get the list of recently updated tasks.
+    /// </summary>
+    private static async Task GetCommandMru(HttpContext context, ICommandLog commandLog)
+    {
+        if (commandLog == null)
+        {
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            await context.Response.WriteAsync("Command log service not found.");
+            return;
+        }
+
+        CommandTaskCollectionDto data = new()
+        {
+            Tasks = commandLog.GetRecentlyUpdatedItems().Select(t => t.ToDto()).ToList()
+        };
+
+        await PublishResponce(context, data);
     }
 
     /// <summary>

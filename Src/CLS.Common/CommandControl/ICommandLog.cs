@@ -11,6 +11,16 @@ public interface ICommandLog
     IReadOnlyList<CommandTask> Items { get; }
 
     /// <summary>
+    /// Get the list of recently updated items.
+    /// </summary>
+    /// <returns>A read-only list of recently updated items.</returns>
+    /// <remarks>
+    /// This method returns a list of tasks that have been updated recently.
+    /// The list is cleared after each call to this method.
+    /// </remarks>
+    IReadOnlyList<CommandTask> GetRecentlyUpdatedItems();
+
+    /// <summary>
     /// Add a single task to the log.
     /// </summary>
     /// <param name="task">The task to be added.</param>

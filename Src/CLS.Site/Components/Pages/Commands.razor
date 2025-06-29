@@ -70,6 +70,13 @@ else
     {
         // Load the command list
         commands = await CLSAPIService.RequestCommandLog();
+
+        CLSAPIService.OnUpdated += OnCommandsUpdated;
+    }
+
+    private void OnCommandsUpdated()
+    {
+        InvokeAsync(StateHasChanged);
     }
 
     private async Task UpdateCommandStatus(Guid id, CommandStatus status)
@@ -93,5 +100,14 @@ else
     {
         bool success = await CLSAPIService.SetQueueStatus(DutyControlCommandType.EnableQueue);
         StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        // Unsubscribe from the event to prevent memory leaks
+        if (CLSAPIService != null)
+        {
+            CLSAPIService.OnUpdated -= OnCommandsUpdated;
+        }
     }
 }

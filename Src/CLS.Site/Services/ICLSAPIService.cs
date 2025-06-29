@@ -10,6 +10,16 @@ namespace CLS.Site.Services;
 public interface ICLSAPIService
 {
     /// <summary>
+    /// The event that is raised when the command log is updated.
+    /// </summary>
+    event Action? OnUpdated;
+
+    /// <summary>
+    /// The List of command tasks.
+    /// </summary>
+    List<CommandTaskDto> Items { get; }
+
+    /// <summary>
     /// Request the command log from the API.
     /// </summary>
     Task<CommandTaskCollectionDto> RequestCommandLog();
