@@ -1,6 +1,6 @@
 using CLS.Common.CommandControl;
 
-namespace CLS.Common.RequestsAndResponces;
+namespace CLS.Common.RequestsAndResponses;
 
 /// <summary>
 /// The request to cancel a command.

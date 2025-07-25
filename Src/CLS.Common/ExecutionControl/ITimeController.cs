@@ -61,7 +61,7 @@ public interface ITimeController : IDisposable
     /// as prescribed at Schedule.
     /// </summary>
     /// <remarks>
-    /// TODO: This mrthod should not be called directly.
+    /// TODO: This method should not be called directly.
     /// </remarks>
     void UpdateRandomTimeDelay();
     #endregion

@@ -8,12 +8,12 @@ public class SampleProgram
 {
     #region Code
     /// <summary>
-    /// This is the code that will be used to test the Command Line Tasc Controller.
+    /// This is the code that will be used to test the Command Line Task Controller.
     /// This sample program must perform the following tasks:
     /// 1. Accept a string as a command line argument.
     /// 2. Print to console a small greeting.
     /// 3. Wait for 0,1 second.
-    /// 4. Print to console a task progress imitation mesaages from 0% to 100% in 20% increments with 20 millisecond delay between each message.
+    /// 4. Print to console a task progress imitation messages from 0% to 100% in 20% increments with 20 millisecond delay between each message.
     /// 5. Print to console an input string.
     /// 6. Print to console a small goodbye message.
     /// 7. If the input string is "exit", then exit the program.

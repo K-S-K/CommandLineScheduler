@@ -11,7 +11,7 @@ public class TaskParserTests
     {
         // Arrange
         StringBuilder sb = new();
-        sb.AppendLine("My downlosd list");
+        sb.AppendLine("My download list");
         sb.AppendLine("https://www.youtube.com/watch?v=6Dh-RL__uN4");
         sb.AppendLine("https://www.youtube.com/watch?v=6Dh-RL__uN5");
         sb.AppendLine("");

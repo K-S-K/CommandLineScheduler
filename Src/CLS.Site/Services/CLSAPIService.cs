@@ -1,6 +1,6 @@
-using CLS.Common.CommandControl;
 using CLS.Common.DTO;
-using CLS.Common.RequestsAndResponces;
+using CLS.Common.CommandControl;
+using CLS.Common.RequestsAndResponses;
 
 namespace CLS.Site.Services;
 
@@ -29,6 +29,14 @@ public class CLSAPIService : ICLSAPIService
     #endregion
 
 
+    #region -> Public Properties
+    /// <summary>
+    /// The List of command tasks.
+    /// </summary>
+    public List<CommandTaskDto> Items { get; private set; } = [];
+    #endregion
+
+
     #region -> Public Methods
     /// <summary>
     /// Request the command log from the API.
@@ -42,7 +50,7 @@ public class CLSAPIService : ICLSAPIService
     }
 
     /// <summary>
-    /// Reqeust for the update of the command status.
+    /// Request for the update of the command status.
     /// </summary>
     /// <param name="id">The ID of the command to be canceled</param>
     /// <param name="status">The new status of the command</param>
@@ -50,8 +58,8 @@ public class CLSAPIService : ICLSAPIService
     public async Task<bool> UpdateCommandStatus(Guid id, CommandStatus status)
     {
         CmdUpdateRequest requestData = new() { Id = id, Status = status };
-        CmdRelatedResponce result =
-            await CallAPI<CmdRelatedResponce>(RequestType.Put, $"/cmd-upd", requestData);
+        CmdRelatedResponse result =
+            await CallAPI<CmdRelatedResponse>(RequestType.Put, $"/cmd-upd", requestData);
 
         return result.Success;
     }
@@ -63,10 +71,24 @@ public class CLSAPIService : ICLSAPIService
     public async Task<bool> SetQueueStatus(DutyControlCommandType cmnd)
     {
         CmdDutyControl requestData = new() { Command = cmnd };
-        CmdRelatedResponce result =
-            await CallAPI<CmdRelatedResponce>(RequestType.Put, $"/queue-control", requestData);
+        CmdRelatedResponse result =
+            await CallAPI<CmdRelatedResponse>(RequestType.Put, $"/queue-control", requestData);
 
         return result.Success;
+    }
+
+    /// <summary>
+    /// Get the list of updated command tasks from the API.
+    /// </summary>
+    /// <returns>A list of updated command tasks</returns>
+    public async Task<List<CommandTaskDto>> GetItemUpdatesAsync()
+    {
+        CommandTaskCollectionDto updatedCommands =
+            await CallAPI<CommandTaskCollectionDto>(RequestType.Get, "/cmd-mru");
+
+        List<CommandTaskDto> items = updatedCommands.Tasks.ToList();
+
+        return items;
     }
     #endregion
 

@@ -15,7 +15,7 @@ public static class DIExtensions
         // Add ICommandTypeLibrary implementation
         services.AddSingleton<ICommandTemplateLibrary, CommandTemplateLibrary>();
 
-        // Add ITimeController implementation provided with ICurentTimeProvider instance registered above
+        // Add ITimeController implementation provided with ICurrentTimeProvider instance registered above
         services.AddSingleton<ITimeController, TimeController>(serviceProvider =>
         {
             ICurrentTimeProvider currentTimeProvider =

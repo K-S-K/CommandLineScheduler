@@ -2,10 +2,12 @@
 @using CLS.Common.DTO
 @using CLS.Site.Services
 @using CLS.Common.CommandControl
-@using CLS.Common.RequestsAndResponces
+@using CLS.Common.RequestsAndResponses
 @attribute [StreamRendering]
 
 @inject ICLSAPIService CLSAPIService
+@inject ItemStore ItemStore
+
 @rendermode InteractiveServer
 
 <PageTitle>Command queue</PageTitle>
@@ -34,7 +36,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var command in commands.Tasks)
+            @foreach (var command in ItemStore.Items)
             {
                 <tr>
                     <td>@command.Arguments</td>
@@ -70,6 +72,13 @@ else
     {
         // Load the command list
         commands = await CLSAPIService.RequestCommandLog();
+
+        ItemStore.OnUpdated += OnItemsUpdated;
+    }
+
+    private void OnItemsUpdated()
+    {
+        InvokeAsync(StateHasChanged);
     }
 
     private async Task UpdateCommandStatus(Guid id, CommandStatus status)
@@ -93,5 +102,14 @@ else
     {
         bool success = await CLSAPIService.SetQueueStatus(DutyControlCommandType.EnableQueue);
         StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        // Unsubscribe from the event to prevent memory leaks
+        if (ItemStore != null)
+        {
+            ItemStore.OnUpdated -= OnItemsUpdated;
+        }
     }
 }

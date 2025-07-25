@@ -1,6 +1,6 @@
 using CLS.Common.DTO;
 using CLS.Common.CommandControl;
-using CLS.Common.RequestsAndResponces;
+using CLS.Common.RequestsAndResponses;
 
 namespace CLS.Site.Services;
 
@@ -10,12 +10,17 @@ namespace CLS.Site.Services;
 public interface ICLSAPIService
 {
     /// <summary>
+    /// The List of command tasks.
+    /// </summary>
+    List<CommandTaskDto> Items { get; }
+
+    /// <summary>
     /// Request the command log from the API.
     /// </summary>
     Task<CommandTaskCollectionDto> RequestCommandLog();
 
     /// <summary>
-    /// Reqeust for the update of the command status.
+    /// Request for the update of the command status.
     /// </summary>
     /// <param name="id">The ID of the command to be canceled</param>
     /// <param name="status">The new status of the command</param>
@@ -27,4 +32,6 @@ public interface ICLSAPIService
     /// </summary>
     /// <param name="cmnd">The command to set the queue status</param>
     Task<bool> SetQueueStatus(DutyControlCommandType cmnd);
+
+    Task<List<CommandTaskDto>> GetItemUpdatesAsync();
 }
