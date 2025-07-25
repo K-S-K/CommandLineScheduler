@@ -37,4 +37,6 @@ public interface ICLSAPIService
     /// </summary>
     /// <param name="cmnd">The command to set the queue status</param>
     Task<bool> SetQueueStatus(DutyControlCommandType cmnd);
+
+    Task<List<CommandTaskDto>> GetItemUpdatesAsync();
 }

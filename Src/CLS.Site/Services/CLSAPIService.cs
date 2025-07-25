@@ -7,7 +7,7 @@ namespace CLS.Site.Services;
 /// <summary>
 /// The service to communicate with the CLS control API.
 /// </summary>
-public class CLSAPIService : BackgroundService, ICLSAPIService
+public class CLSAPIService : ICLSAPIService
 {
     #region -> Events
     /// <summary>
@@ -122,44 +122,14 @@ public class CLSAPIService : BackgroundService, ICLSAPIService
         return responseData;
     }
 
-    /// <summary>
-    /// The method that is called when the service is started.
-    /// </summary>
-    /// <param name="stoppingToken">The token to monitor for cancellation requests</param
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            await RequestUpdatedItems();
-
-            await Task.Delay(TimeSpan.FromMilliseconds(500), stoppingToken);
-        }
-    }
-
-    /// <summary>
-    /// Request the updated items from the API.
-    /// </summary>
-    private async Task RequestUpdatedItems()
+    public async Task<List<CommandTaskDto>> GetItemUpdatesAsync()
     {
         CommandTaskCollectionDto updatedCommands =
             await CallAPI<CommandTaskCollectionDto>(RequestType.Get, "/cmd-mru");
 
         List<CommandTaskDto> items = updatedCommands.Tasks.ToList();
 
-        if (items.Count > 0)
-        {
-            UpdateItems(items);
-        }
-    }
-
-    /// <summary>
-    /// Update the items in the service.
-    /// </summary>
-    /// <param name="updatedItems">The list of updated items</param>
-    private void UpdateItems(List<CommandTaskDto> updatedItems)
-    {
-        Items = updatedItems;
-        OnUpdated?.Invoke();
+        return items;
     }
     #endregion
 }

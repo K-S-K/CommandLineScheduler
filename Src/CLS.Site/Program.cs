@@ -11,6 +11,9 @@ internal class Program
         builder.Services.AddSingleton<ICLSAPIService>(
             new CLSAPIService("http://localhost:5375"));
 
+        builder.Services.AddSingleton<ItemStore>();
+        builder.Services.AddHostedService<ItemUpdateService>();
+
         // Add services to the container.
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();

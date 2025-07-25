@@ -82,6 +82,8 @@ public class CommandLog : ICommandLog
         try
         {
             _items.AddRange(tasks);
+            tasks.Select(t => t.Id).ToList()
+                .ForEach(id => _updatedTaskIds.Add(id));
 
             LogInformation($"{tasks.Count()} tasks added.");
         }
@@ -158,6 +160,8 @@ public class CommandLog : ICommandLog
             if (task is not null)
             {
                 task.Status = status;
+
+                _updatedTaskIds.Add(task.Id);
             }
 
             return task is not null;
