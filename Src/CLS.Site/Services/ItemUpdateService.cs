@@ -1,5 +1,8 @@
 namespace CLS.Site.Services;
 
+/// <summary>
+/// The service to update command items in the background.
+/// </summary>
 public class ItemUpdateService : BackgroundService
 {
     private readonly ICLSAPIService _itemApi;

@@ -2,12 +2,37 @@ using CLS.Common.DTO;
 
 namespace CLS.Site.Services;
 
+/// <summary>
+/// The store for command items.
+/// </summary>
 public class ItemStore
 {
-    private readonly Dictionary<Guid, CommandTaskDto> _items = [];
-    public IReadOnlyCollection<CommandTaskDto> Items => _items.Values;
+    #region -> Events
+    /// <summary>
+    /// Event that is triggered when the items in the store are updated.
+    /// </summary>
     public event Action? OnUpdated;
+    #endregion
 
+
+    #region -> Private Fields
+    private readonly Dictionary<Guid, CommandTaskDto> _items = [];
+    #endregion
+
+
+    #region -> Public Properties
+    /// <summary>
+    /// Gets the collection of command items.
+    /// </summary>
+    public IReadOnlyCollection<CommandTaskDto> Items => _items.Values;
+    #endregion
+
+
+    #region -> Methods
+    /// <summary>
+    /// Update the contents of the store with new items.
+    /// </summary>
+    /// <param name="item">The item to add or update</param>
     public void UpdateItems(List<CommandTaskDto> newItems)
     {
         // Update existing items or add new ones
@@ -26,4 +51,5 @@ public class ItemStore
         // Notify subscribers that the items have been updated
         OnUpdated?.Invoke();
     }
+    #endregion
 }

@@ -1,11 +1,10 @@
-using System;
 using System.Text;
 using System.Text.Json;
 
 using CLS.Common.DTO;
 using CLS.Common.TimeControl;
 using CLS.Common.CommandControl;
-using CLS.Common.RequestsAndResponces;
+using CLS.Common.RequestsAndResponses;
 
 namespace CLS.Service;
 
@@ -29,8 +28,8 @@ internal class Program
 
         // Configure ITimeController instance
         ITimeController timeController = app.Services.GetRequiredService<ITimeController>();
-        timeController.Schedule.ExecutionWindow.AlowedExecutionTimeBeg = TimeSpan.FromHours(0);
-        timeController.Schedule.ExecutionWindow.AlowedExecutionTimeEnd = TimeSpan.FromHours(24);
+        timeController.Schedule.ExecutionWindow.AllowedExecutionTimeBeg = TimeSpan.FromHours(0);
+        timeController.Schedule.ExecutionWindow.AllowedExecutionTimeEnd = TimeSpan.FromHours(24);
         timeController.Schedule.ExecutionWindow.MinDelayBetweenTasks = TimeSpan.FromSeconds(5);
         timeController.Schedule.ExecutionWindow.MaxDelayBetweenTasks = TimeSpan.FromSeconds(5);
         timeController.UpdateRandomTimeDelay();
@@ -41,7 +40,7 @@ internal class Program
 
         // Prepare temporary content
         StringBuilder sb = new();
-        sb.AppendLine("My downlosd list");
+        sb.AppendLine("My download list");
         sb.AppendLine("https://www.youtube.com/watch?v=6Dh-RL__uN4");
         sb.AppendLine("https://www.youtube.com/watch?v=6Dh-RL__uN5");
         sb.AppendLine("");
@@ -116,7 +115,7 @@ internal class Program
     /// </summary>
     /// <param name="context">The HttpContext of the request.</param>
     /// <param name="commandLog">The command log service instance from DI.</param>
-    /// <returns>the responce to the client containing the command log.</returns>
+    /// <returns>the response to the client containing the command log.</returns>
     private static async Task GetCommandLog(HttpContext context, ICommandLog commandLog)
     {
         CommandTaskCollectionDto data = new()
@@ -124,7 +123,7 @@ internal class Program
             Tasks = commandLog.Items.Select(t => t.ToDto()).ToList()
         };
 
-        await PublishResponce(context, data);
+        await PublishResponse(context, data);
     }
 
     /// <summary>
@@ -133,12 +132,12 @@ internal class Program
     /// <param name="context">The HttpContext of the request.</param>
     /// <param name="request">The request data from the client.</param>
     /// <param name="commandLog">The command log service instance from DI.</param>
-    /// <returns>the responce to the client containing the result of the operation.</returns>
+    /// <returns>the response to the client containing the result of the operation.</returns>
     private static async Task PutCommandUpd(HttpContext context, CmdUpdateRequest request, ICommandLog commandLog)
     {
         bool success = commandLog.UpdateTaskStatus(request.Id, request.Status);
 
-        CmdRelatedResponce responce = new()
+        CmdRelatedResponse responce = new()
         {
             Id = request.Id,
             Success = success,
@@ -146,7 +145,7 @@ internal class Program
             Message = success ? "Task status updated." : "Task not found."
         };
 
-        await PublishResponce(context, responce);
+        await PublishResponse(context, responce);
     }
 
 
@@ -167,25 +166,25 @@ internal class Program
             Tasks = commandLog.GetRecentlyUpdatedItems().Select(t => t.ToDto()).ToList()
         };
 
-        await PublishResponce(context, data);
+        await PublishResponse(context, data);
     }
 
     /// <summary>
-    /// Publish the responce to the client.
+    /// Publish the response to the client.
     /// </summary>
     /// <param name="context">The HttpContext of the request.</param>
-    /// <param name="data">The responce data prepared for the client.</param>
+    /// <param name="data">The response data prepared for the client.</param>
     /// <returns></returns>
-    private static async Task PublishResponce(HttpContext context, object? data)
+    private static async Task PublishResponse(HttpContext context, object? data)
     {
         ArgumentNullException.ThrowIfNull(data);
 
         context.Response.Headers.CacheControl = "no-cache";
         context.Response.ContentType = "application/json";
 
-        string responceStr = JsonSerializer.Serialize(data);
+        string responseStr = JsonSerializer.Serialize(data);
 
-        await context.Response.WriteAsync(responceStr);
+        await context.Response.WriteAsync(responseStr);
     }
 
     /// <summary>
@@ -208,6 +207,6 @@ internal class Program
             await timeController.PauseDuty();
         }
 
-        await PublishResponce(context, new { Success = true, Message = "Duty control updated." });
+        await PublishResponse(context, new { Success = true, Message = "Duty control updated." });
     }
 }

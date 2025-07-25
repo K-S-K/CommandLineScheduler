@@ -1,6 +1,6 @@
 using CLS.Common.DTO;
 using CLS.Common.CommandControl;
-using CLS.Common.RequestsAndResponces;
+using CLS.Common.RequestsAndResponses;
 
 namespace CLS.Site.Services;
 
@@ -9,11 +9,6 @@ namespace CLS.Site.Services;
 /// </summary>
 public interface ICLSAPIService
 {
-    /// <summary>
-    /// The event that is raised when the command log is updated.
-    /// </summary>
-    event Action? OnUpdated;
-
     /// <summary>
     /// The List of command tasks.
     /// </summary>
@@ -25,7 +20,7 @@ public interface ICLSAPIService
     Task<CommandTaskCollectionDto> RequestCommandLog();
 
     /// <summary>
-    /// Reqeust for the update of the command status.
+    /// Request for the update of the command status.
     /// </summary>
     /// <param name="id">The ID of the command to be canceled</param>
     /// <param name="status">The new status of the command</param>

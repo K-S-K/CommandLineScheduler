@@ -26,8 +26,8 @@ public class TimeControllerTests
 
         StringBuilder sb = new();
 
-        timeController.Schedule.ExecutionWindow.AlowedExecutionTimeBeg = TimeSpan.FromHours(0);
-        timeController.Schedule.ExecutionWindow.AlowedExecutionTimeEnd = TimeSpan.FromHours(24);
+        timeController.Schedule.ExecutionWindow.AllowedExecutionTimeBeg = TimeSpan.FromHours(0);
+        timeController.Schedule.ExecutionWindow.AllowedExecutionTimeEnd = TimeSpan.FromHours(24);
         timeController.Schedule.ExecutionWindow.MinDelayBetweenTasks = TimeSpan.FromSeconds(1);
         timeController.Schedule.ExecutionWindow.MaxDelayBetweenTasks = TimeSpan.FromSeconds(1);
 

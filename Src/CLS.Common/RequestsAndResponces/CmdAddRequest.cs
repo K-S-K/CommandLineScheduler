@@ -1,4 +1,4 @@
-namespace CLS.Common.RequestsAndResponces;
+namespace CLS.Common.RequestsAndResponses;
 
 public class CmdAddRequest
 {

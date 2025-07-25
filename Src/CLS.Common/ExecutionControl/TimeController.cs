@@ -95,7 +95,7 @@ public class TimeController : ITimeController
         _logger = logger;
         _currentTimeProvider = currentTimeProvider;
 
-        Schedule = TaskExecutionSchedule.Allways;
+        Schedule = TaskExecutionSchedule.Always;
         UpdateRandomTimeDelay();
 
         TaskStatus = TaskExecutionStatus.Waiting;
@@ -242,12 +242,12 @@ public class TimeController : ITimeController
             b = false;
         }
 
-        else if (Schedule.ExecutionWindow.AlowedExecutionTimeBeg > now.TimeOfDay)
+        else if (Schedule.ExecutionWindow.AllowedExecutionTimeBeg > now.TimeOfDay)
         {
             b = false;
         }
 
-        else if (Schedule.ExecutionWindow.AlowedExecutionTimeEnd < now.TimeOfDay)
+        else if (Schedule.ExecutionWindow.AllowedExecutionTimeEnd < now.TimeOfDay)
         {
             b = false;
         }
@@ -266,8 +266,8 @@ public class TimeController : ITimeController
             // Check the date and time of the task execution.
             Schedule.DateOfBeg <= now.Date &&
             Schedule.DateOfEnd >= now.Date &&
-            Schedule.ExecutionWindow.AlowedExecutionTimeBeg <= now.TimeOfDay &&
-            Schedule.ExecutionWindow.AlowedExecutionTimeEnd >= now.TimeOfDay;
+            Schedule.ExecutionWindow.AllowedExecutionTimeBeg <= now.TimeOfDay &&
+            Schedule.ExecutionWindow.AllowedExecutionTimeEnd >= now.TimeOfDay;
 
         isTimeToExecuteTask = b;
 

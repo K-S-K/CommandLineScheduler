@@ -31,10 +31,10 @@ public class TaskExecutionSchedule
     public TaskExecutionWindow ExecutionWindow { get; set; } = null!;
 
 
-    public static TaskExecutionSchedule Allways => new()
+    public static TaskExecutionSchedule Always => new()
     {
         Id = Guid.NewGuid(),
-        Name = "Allways",
+        Name = "Always",
         DateOfBeg = DateTime.MinValue,
         DateOfEnd = DateTime.MaxValue,
         ExecutionWindow = TaskExecutionWindow.WholeDay,

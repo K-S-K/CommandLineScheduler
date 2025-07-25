@@ -1,11 +1,11 @@
 using CLS.Common.CommandControl;
 
-namespace CLS.Common.RequestsAndResponces;
+namespace CLS.Common.RequestsAndResponses;
 
 /// <summary>
-/// The responce to a command modification request.
+/// The response to a command modification request.
 /// </summary>
-public class CmdRelatedResponce
+public class CmdRelatedResponse
 {
     /// <summary>
     /// The ID of the command.
@@ -13,7 +13,7 @@ public class CmdRelatedResponce
     public Guid Id { get; set; }
 
     /// <summary>
-    /// The successfullness sign of the request completion.
+    /// The sign of success of the command modification.
     /// </summary>
     public bool Success { get; set; }
 

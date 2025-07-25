@@ -18,12 +18,12 @@ public class TaskExecutionWindow
     /// <summary>
     /// The start time of the window.
     /// </summary>
-    public TimeSpan AlowedExecutionTimeBeg { get; set; }
+    public TimeSpan AllowedExecutionTimeBeg { get; set; }
 
     /// <summary>
     /// The end time of the window.
     /// </summary>
-    public TimeSpan AlowedExecutionTimeEnd { get; set; }
+    public TimeSpan AllowedExecutionTimeEnd { get; set; }
 
     /// <summary>
     /// The Minimal delay between tasks.
@@ -42,8 +42,8 @@ public class TaskExecutionWindow
         Name = "Whole Day",
         MinDelayBetweenTasks = TimeSpan.FromMinutes(5),
         MaxDelayBetweenTasks = TimeSpan.FromMinutes(15),
-        AlowedExecutionTimeBeg = TimeSpan.Zero,
-        AlowedExecutionTimeEnd = TimeSpan.FromHours(24),
+        AllowedExecutionTimeBeg = TimeSpan.Zero,
+        AllowedExecutionTimeEnd = TimeSpan.FromHours(24),
     };
 
     public static TaskExecutionWindow WorkingTime => new()
@@ -52,8 +52,8 @@ public class TaskExecutionWindow
         Name = "Working Time",
         MinDelayBetweenTasks = TimeSpan.FromMinutes(5),
         MaxDelayBetweenTasks = TimeSpan.FromMinutes(15),
-        AlowedExecutionTimeBeg = TimeSpan.FromHours(8),
-        AlowedExecutionTimeEnd = TimeSpan.FromHours(18),
+        AllowedExecutionTimeBeg = TimeSpan.FromHours(8),
+        AllowedExecutionTimeEnd = TimeSpan.FromHours(18),
     };
 
     public static TaskExecutionWindow EveningTime => new()
@@ -62,8 +62,8 @@ public class TaskExecutionWindow
         Name = "Evening Time",
         MinDelayBetweenTasks = TimeSpan.FromMinutes(5),
         MaxDelayBetweenTasks = TimeSpan.FromMinutes(15),
-        AlowedExecutionTimeBeg = TimeSpan.FromHours(18),
-        AlowedExecutionTimeEnd = TimeSpan.FromHours(22),
+        AllowedExecutionTimeBeg = TimeSpan.FromHours(18),
+        AllowedExecutionTimeEnd = TimeSpan.FromHours(22),
     };
 
     public static TaskExecutionWindow NightTime => new()
@@ -72,7 +72,7 @@ public class TaskExecutionWindow
         Name = "Night Time",
         MinDelayBetweenTasks = TimeSpan.FromMinutes(5),
         MaxDelayBetweenTasks = TimeSpan.FromMinutes(15),
-        AlowedExecutionTimeBeg = TimeSpan.FromHours(22),
-        AlowedExecutionTimeEnd = TimeSpan.FromHours(8),
+        AllowedExecutionTimeBeg = TimeSpan.FromHours(22),
+        AllowedExecutionTimeEnd = TimeSpan.FromHours(8),
     };
 }
