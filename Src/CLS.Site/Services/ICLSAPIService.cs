@@ -15,9 +15,15 @@ public interface ICLSAPIService
     List<CommandTaskDto> Items { get; }
 
     /// <summary>
-    /// Request the command log from the API.
+    /// Add URLs to the download plan.
     /// </summary>
-    Task<CommandTaskCollectionDto> RequestCommandLog();
+    /// <param name="urls">The URLs to be added</param>
+    /// <returns>True if the request was successful</returns>
+    /// <remarks>
+    /// The URLs should be separated by new lines.
+    /// The backend will split the string into a list of URLs.
+    /// </remarks>
+    Task<bool> AddUrlsToDownloadPlan(string urls);
 
     /// <summary>
     /// Request for the update of the command status.
@@ -28,10 +34,19 @@ public interface ICLSAPIService
     Task<bool> UpdateCommandStatus(Guid id, CommandStatus status);
 
     /// <summary>
+    /// Request the command log from the API.
+    /// </summary>
+    Task<CommandTaskCollectionDto> RequestCommandLog();
+
+    /// <summary>
     /// Set the queue status in the API.
     /// </summary>
     /// <param name="cmnd">The command to set the queue status</param>
     Task<bool> SetQueueStatus(DutyControlCommandType cmnd);
 
+    /// <summary>
+    /// Get the list of updated command tasks from the API.
+    /// </summary>
+    /// <returns>A list of updated command tasks</returns>
     Task<List<CommandTaskDto>> GetItemUpdatesAsync();
 }

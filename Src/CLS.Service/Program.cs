@@ -62,6 +62,7 @@ internal class Program
         app.MapGet("/cmd-log", GetCommandLog);  // http://localhost:5375/cmd-log
         app.MapPut("/cmd-upd", PutCommandUpd);  // http://localhost:5375/cmd-esc
         app.MapGet("/cmd-mru", GetCommandMru); // http://localhost:5375/cmd-mru
+        app.MapPost("/cmd-add", PostCommandAdd); // http://localhost:5375/cmd-add
         app.MapPut("/queue-control", PutDutyControl); // http://localhost:5375/duty-control
 
         // Subscribe to the TimeToExecuteTask event
@@ -137,7 +138,7 @@ internal class Program
     {
         bool success = commandLog.UpdateTaskStatus(request.Id, request.Status);
 
-        CmdRelatedResponse responce = new()
+        CmdRelatedResponse response = new()
         {
             Id = request.Id,
             Success = success,
@@ -145,9 +146,56 @@ internal class Program
             Message = success ? "Task status updated." : "Task not found."
         };
 
-        await PublishResponse(context, responce);
+        await PublishResponse(context, response);
     }
 
+    /// <summary>
+    /// Add new commands to the log.
+    /// </summary>
+    /// <param name="context">The HttpContext of the request.</param>
+    /// <param name="request">The request data from the client.</param>
+    /// <param name="commandLog">The command log service instance from DI.</param>
+    /// <returns>the response to the client containing the result of the operation.</returns>
+    private static async Task PostCommandAdd(HttpContext context, CmdAddRequest request, ICommandLog commandLog)
+    {
+        if (commandLog == null)
+        {
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            await context.Response.WriteAsync("Command log service not found.");
+            return;
+        }
+
+        try
+        {
+            // Parse the content
+            Common.ScriptProcessing.YTDLParser parser = new(request.Arguments);
+
+            // Get the list of tasks
+            List<CommandTask> tasks = parser.GetDownloadTasks("");
+
+            // Add the tasks to the log
+            commandLog.AddTasks(tasks);
+
+            CmdRelatedResponse response = new()
+            {
+                Id = Guid.Empty,
+                Success = true,
+                Message = $"Added {tasks.Count} tasks to the command log."
+            };
+
+            await PublishResponse(context, response);
+        }
+        catch (Exception ex)
+        {
+            CmdRelatedResponse response = new()
+            {
+                Id = Guid.Empty,
+                Success = false,
+                Message = $"Error adding tasks: {ex.Message}"
+            };
+            await PublishResponse(context, response);
+        }
+    }
 
     /// <summary>
     /// Get the list of recently updated tasks.
