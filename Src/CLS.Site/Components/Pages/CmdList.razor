@@ -1,8 +1,9 @@
-﻿@page "/cmd-log"
+﻿@page "/"
 @using CLS.Common.DTO
 @using CLS.Site.Services
 @using CLS.Common.CommandControl
 @using CLS.Common.RequestsAndResponses
+@using Microsoft.AspNetCore.Components.Web
 @attribute [StreamRendering]
 
 @inject ICLSAPIService CLSAPIService
@@ -10,9 +11,9 @@
 
 @rendermode InteractiveServer
 
-<PageTitle>Command queue</PageTitle>
+<PageTitle>Queue of YT-DL</PageTitle>
 
-<h1>Command queue</h1>
+<h1>Download queue</h1>
 
 @if (commands == null)
 {

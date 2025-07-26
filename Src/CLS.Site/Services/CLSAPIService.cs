@@ -39,14 +39,28 @@ public class CLSAPIService : ICLSAPIService
 
     #region -> Public Methods
     /// <summary>
-    /// Request the command log from the API.
+    /// Add URLs to the download plan.
     /// </summary>
-    public async Task<CommandTaskCollectionDto> RequestCommandLog()
+    /// <param name="urls">The URLs to be added</param>
+    /// <returns>True if the request was successful</returns>
+    /// <remarks>
+    /// The URLs should be separated by new lines.
+    /// The backend will split the string into a list of URLs.
+    /// </remarks>
+    public async Task<bool> AddUrlsToDownloadPlan(string urls)
     {
-        CommandTaskCollectionDto commands =
-            await CallAPI<CommandTaskCollectionDto>(RequestType.Get, "/cmd-log");
+        CmdAddRequest requestData = new()
+        {
+            Name = "New Download Plan",
+            Directory = string.Empty,
+            Command = string.Empty,
+            Arguments = urls
+        };
 
-        return commands;
+        CmdRelatedResponse result =
+            await CallAPI<CmdRelatedResponse>(RequestType.Post, "/cmd-add", requestData);
+
+        return result.Success;
     }
 
     /// <summary>
@@ -63,6 +77,18 @@ public class CLSAPIService : ICLSAPIService
 
         return result.Success;
     }
+
+    /// <summary>
+    /// Request the command log from the API.
+    /// </summary>
+    public async Task<CommandTaskCollectionDto> RequestCommandLog()
+    {
+        CommandTaskCollectionDto commands =
+            await CallAPI<CommandTaskCollectionDto>(RequestType.Get, "/cmd-log");
+
+        return commands;
+    }
+
 
     /// <summary>
     /// Set the queue status in the API.

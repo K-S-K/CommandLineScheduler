@@ -1,0 +1,57 @@
+﻿@page "/add-new"
+@using CLS.Site.Services
+@using Microsoft.AspNetCore.Components.Web
+
+@inject ICLSAPIService CLSAPIService
+
+@rendermode InteractiveServer
+
+<PageTitle>Add to YT-DL</PageTitle>
+
+<h1>Add New Urls to Download Plan</h1>
+
+<button class="btn btn-primary" @onclick="@(async () => await SendRequest())">Submit</button>
+
+<p class="mt-3">
+    Enter the URLs you want to add to the download queue. You can enter multiple URLs, each on a new line.
+</p>
+
+<!-- The multiline text box for entering URLs -->
+<textarea @bind="newUrl" rows="10" class="form-control"></textarea>
+
+<p class="mt-3">
+    After entering the URLs, click the "Submit" button to add them to the download plan.
+</p>
+
+<p class="mt-3">
+    URLs must be valid and accessible by the YT-DL service. Ensure that each URL is on a new line for proper
+    processing.<br>
+    If you have multiple URLs, separate them by pressing Enter after each URL.<br>
+    The example format is as follows: https://www.youtube.com/watch?v=6Dh-RL__uN
+</p>
+
+@inject NavigationManager NavigationManager
+
+@code {
+    // The URL List String to be added
+    // This string can be multiple URLs separated by new lines
+    // It will be split into a list of URLs at the backend
+    private string newUrl = string.Empty;
+
+    private async Task SendRequest()
+    {
+
+        // Validate the newUrl string to ensure it is not empty
+        if (string.IsNullOrWhiteSpace(newUrl))
+        {
+            // Optionally, you can show a message to the user indicating that the input is invalid
+            return;
+        }
+
+        // Send the request to the backend service
+        await CLSAPIService.AddUrlsToDownloadPlan(newUrl);
+
+        // Navigate to the root page after sending the request
+        NavigationManager.NavigateTo("/");
+    }
+}
