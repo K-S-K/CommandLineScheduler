@@ -2,7 +2,7 @@ using System.Text;
 using System.Reflection;
 using System.Diagnostics;
 
-namespace CLS.Test;
+namespace CLS.Common.ExecutionControl;
 
 public class SampleProgram
 {
@@ -40,7 +40,7 @@ public class SampleProgram
             sbCode.AppendLine("        for (int i = 0; i <= 100; i += 20)");
             sbCode.AppendLine("        {");
             sbCode.AppendLine("            Console.WriteLine($\"Task progress: {i}%\");");
-            sbCode.AppendLine("            await Task.Delay(20);");
+            sbCode.AppendLine("            await Task.Delay(500);");
             sbCode.AppendLine("        }");
             sbCode.AppendLine();
             sbCode.AppendLine("        if(args.Length > 0)");
@@ -51,7 +51,7 @@ public class SampleProgram
             sbCode.AppendLine("            {");
             sbCode.AppendLine("                return;");
             sbCode.AppendLine("            }");
-            sbCode.AppendLine();    
+            sbCode.AppendLine();
             sbCode.AppendLine("            if (args[0] == \"error\")");
             sbCode.AppendLine("            {");
             sbCode.AppendLine("                throw new Exception(\"An intentional error occurred!\");");
@@ -98,10 +98,25 @@ public class SampleProgram
     /// <summary>
     /// Get the current execution directory
     /// </summary>
-    public static string CurrentDirectory
-        => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
-            ?? throw new Exception("Current directory not found");
+    public static string DeploymentDirectory
+    {
+        get
+        {
+            string currentDirectory =
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+                ?? throw new Exception("Failed to get the current directory");
 
+            string deploymentDirectory = Path.Combine(currentDirectory, "TestConsoleProgram");
+
+            // Create the directory if it does not exist
+            if (!Directory.Exists(deploymentDirectory))
+            {
+                Directory.CreateDirectory(deploymentDirectory);
+            }
+
+            return deploymentDirectory;
+        }
+    }
 
     /// <summary>
     /// Deploy the code to a directory and compile it

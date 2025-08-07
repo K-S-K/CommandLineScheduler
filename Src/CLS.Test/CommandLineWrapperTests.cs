@@ -19,8 +19,7 @@ public class CommandLineWrapperTests
     public void CommandLineWrapperPositiveTest()
     {
         // Prepare Deployment Directory for the program
-        string deploymentDirectory =
-            Path.Combine(SampleProgram.CurrentDirectory, "Program");
+        string deploymentDirectory = SampleProgram.DeploymentDirectory;
 
         // Deploy a simple command line app to the deployment directory
         string exeFileName = SampleProgram.Deploy(deploymentDirectory);
@@ -49,8 +48,7 @@ public class CommandLineWrapperTests
     public void CommandLineWrapperNegativeTest()
     {
         // Prepare Deployment Directory for the program
-        string deploymentDirectory =
-            Path.Combine(SampleProgram.CurrentDirectory, "Program");
+        string deploymentDirectory = SampleProgram.DeploymentDirectory;
 
         // Deploy a simple command line app to the deployment directory
         string exeFileName = SampleProgram.Deploy(deploymentDirectory);
