@@ -4,14 +4,22 @@ namespace CLS.Common.ExecutionControl;
 
 /// <summary>
 /// Command line wrapper for 
-/// executing command line commands.
+/// executing command line commands with output streaming.
 /// </summary>
 public static class CommandLineWrapper
 {
-    public static string ExecuteCommand(string cmd, string args)
+    /// <summary>
+    /// Executes a command and raises events for each output/error line.
+    /// </summary>
+    public static async Task<CommandExecutionResult> ExecuteCommand(
+        string cmd, string args,
+        Action<string>? OnOutputLineReceived = null,
+        Action<string>? OnErrorLineReceived = null
+    )
     {
-        // Prepare a ProcessStartInfo for linux with arguments to execute the compiled program
-        ProcessStartInfo startInfo = new()
+        using Process process = new();
+
+        process.StartInfo = new ProcessStartInfo
         {
             FileName = cmd,
             Arguments = args,
@@ -21,20 +29,28 @@ public static class CommandLineWrapper
             CreateNoWindow = true
         };
 
-        // Execute the compiled program
-        Process program = Process.Start(startInfo)
-            ?? throw new Exception("Failed to start the program process");
-
-        // Read the output of the program
-        string output = program.StandardOutput.ReadToEnd();
-        string error = program.StandardError.ReadToEnd();
-
-        // Check if the program has any errors
-        if (!string.IsNullOrEmpty(error))
+        process.OutputDataReceived += (sender, e) =>
         {
-            throw new Exception(error);
-        }
+            if (!string.IsNullOrEmpty(e.Data))
+                OnOutputLineReceived?.Invoke(e.Data);
+        };
 
-        return output;
+        process.ErrorDataReceived += (sender, e) =>
+        {
+            if (!string.IsNullOrEmpty(e.Data))
+                OnErrorLineReceived?.Invoke(e.Data);
+        };
+
+        process.Start();
+
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+
+        await process.WaitForExitAsync();
+
+        CommandExecutionResult result = process.ExitCode == 0 ?
+        CommandExecutionResult.Success : CommandExecutionResult.Failed;
+
+        return result;
     }
 }
