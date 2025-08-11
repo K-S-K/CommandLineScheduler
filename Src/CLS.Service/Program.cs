@@ -42,10 +42,10 @@ internal class Program
         // Prepare temporary content
         StringBuilder sb = new();
         sb.AppendLine("My download list");
-        sb.AppendLine("https://www.youtube.com/watch?v=6Dh-RL__uN4");
-        sb.AppendLine("https://www.youtube.com/watch?v=6Dh-RL__uN5");
+        sb.AppendLine("https://www.youtube.com/watch?v=Stub_DL__uN4");
+        sb.AppendLine("https://www.youtube.com/watch?v=Stub_DL__uN5");
         sb.AppendLine("");
-        sb.AppendLine("https://www.youtube.com/watch?v=6Dh-RL__uN6");
+        sb.AppendLine("https://www.youtube.com/watch?v=Stub_DL__uN6");
         string inputText = sb.ToString();
 
         // Parse the content
@@ -109,7 +109,7 @@ internal class Program
                     $"{nameof(CommandExecutionResult)}.{result}");
 
             // Mark the task as completed
-            cmdLog.UpdateTaskStatus(nextTask.Id, CommandStatus.Completed);
+            cmdLog.UpdateTaskStatus(nextTask.Id, status);
         }
         catch (Exception ex)
         {

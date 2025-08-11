@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace CLS.Common.CommandControl;
 
 public record CommandTask
@@ -36,6 +38,12 @@ public record CommandTask
     /// The status of the command.
     /// </summary>
     public CommandStatus Status { get; set; } = CommandStatus.Pending;
+
+    /// <summary>
+    /// Indicates whether the command is a stub for the test purposes.
+    /// </summary>
+    [JsonIgnore]
+    public bool IsStub => Arguments.Contains("Stub_DL");
     #endregion
 
 

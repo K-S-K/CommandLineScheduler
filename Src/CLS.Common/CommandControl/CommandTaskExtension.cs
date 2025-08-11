@@ -4,7 +4,28 @@ namespace CLS.Common.CommandControl;
 
 public static class CommandTaskExtension
 {
+    /// <summary>
+    /// Executes the command task asynchronously.
+    /// </summary>
+    /// <remarks>
+    /// TODO: Add CancellationToken cancellationToken
+    /// </remarks>
     public static async Task<CommandExecutionResult> ExecuteAsync(this CommandTask task)
+    {
+        if (task.IsStub)
+        {
+            // Execute test stub
+            return await task.ExecuteAsStubAsync();
+        }
+
+        else
+        {
+            // TODO: Execute the command using the CommandLineWrapper
+            return CommandExecutionResult.Failed;
+        }
+    }
+
+    public static async Task<CommandExecutionResult> ExecuteAsStubAsync(this CommandTask task)
     {
         // Prepare Deployment Directory for the program
         string deploymentDirectory = SampleProgram.DeploymentDirectory;

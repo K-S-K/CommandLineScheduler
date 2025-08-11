@@ -12,10 +12,10 @@ public class TaskParserTests
         // Arrange
         StringBuilder sb = new();
         sb.AppendLine("My download list");
-        sb.AppendLine("https://www.youtube.com/watch?v=6Dh-RL__uN4");
-        sb.AppendLine("https://www.youtube.com/watch?v=6Dh-RL__uN5");
+        sb.AppendLine("https://www.youtube.com/watch?v=Stub_DL__uN4");
+        sb.AppendLine("https://www.youtube.com/watch?v=Stub_DL__uN5");
         sb.AppendLine("");
-        sb.AppendLine("https://www.youtube.com/watch?v=6Dh-RL__uN6");
+        sb.AppendLine("https://www.youtube.com/watch?v=Stub_DL__uN6");
         string inputText = sb.ToString();
 
         YTDLParser parser = new(inputText);
@@ -25,9 +25,9 @@ public class TaskParserTests
 
         // Assert
         Assert.Equal(3, urls.Count);
-        Assert.Equal("https://www.youtube.com/watch?v=6Dh-RL__uN4", urls[0]);
-        Assert.Equal("https://www.youtube.com/watch?v=6Dh-RL__uN5", urls[1]);
-        Assert.Equal("https://www.youtube.com/watch?v=6Dh-RL__uN6", urls[2]);
+        Assert.Equal("https://www.youtube.com/watch?v=Stub_DL__uN4", urls[0]);
+        Assert.Equal("https://www.youtube.com/watch?v=Stub_DL__uN5", urls[1]);
+        Assert.Equal("https://www.youtube.com/watch?v=Stub_DL__uN6", urls[2]);
 
         // Act
         List<CommandTask> tasks = parser.GetDownloadTasks("C:\\Temp");
@@ -37,8 +37,8 @@ public class TaskParserTests
         Assert.Equal("C:\\Temp", tasks[0].Directory);
         Assert.Equal("C:\\Temp", tasks[1].Directory);
         Assert.Equal("C:\\Temp", tasks[2].Directory);
-        Assert.Equal("https://www.youtube.com/watch?v=6Dh-RL__uN4", tasks[0].Arguments);
-        Assert.Equal("https://www.youtube.com/watch?v=6Dh-RL__uN5", tasks[1].Arguments);
-        Assert.Equal("https://www.youtube.com/watch?v=6Dh-RL__uN6", tasks[2].Arguments);
+        Assert.Equal("https://www.youtube.com/watch?v=Stub_DL__uN4", tasks[0].Arguments);
+        Assert.Equal("https://www.youtube.com/watch?v=Stub_DL__uN5", tasks[1].Arguments);
+        Assert.Equal("https://www.youtube.com/watch?v=Stub_DL__uN6", tasks[2].Arguments);
     }
 }
