@@ -4,6 +4,7 @@ using System.Text.Json;
 using CLS.Common.DTO;
 using CLS.Common.TimeControl;
 using CLS.Common.CommandControl;
+using CLS.Common.ExecutionControl;
 using CLS.Common.RequestsAndResponses;
 
 namespace CLS.Service;
@@ -41,10 +42,10 @@ internal class Program
         // Prepare temporary content
         StringBuilder sb = new();
         sb.AppendLine("My download list");
-        sb.AppendLine("https://www.youtube.com/watch?v=6Dh-RL__uN4");
-        sb.AppendLine("https://www.youtube.com/watch?v=6Dh-RL__uN5");
+        sb.AppendLine("https://www.youtube.com/watch?v=Stub_DL__uN4");
+        sb.AppendLine("https://www.youtube.com/watch?v=Stub_DL__uN5");
         sb.AppendLine("");
-        sb.AppendLine("https://www.youtube.com/watch?v=6Dh-RL__uN6");
+        sb.AppendLine("https://www.youtube.com/watch?v=Stub_DL__uN6");
         string inputText = sb.ToString();
 
         // Parse the content
@@ -74,7 +75,7 @@ internal class Program
         app.Run();
     }
 
-    private static void ExecuteNextTask(object? sender, TimeToExecuteTaskEventArgs args)
+    private static async void ExecuteNextTask(object? sender, TimeToExecuteTaskEventArgs args)
     {
         if (cmdLog == null)
         {
@@ -98,10 +99,17 @@ internal class Program
             Task.Delay(1000).Wait();
 
             // TODO: Implement the actual task execution logic here
-            // nextTask.Execute();
+            CommandExecutionResult result = await nextTask.ExecuteAsync();
+
+            // Derive the command status from the execution result
+            CommandStatus status =
+                result == CommandExecutionResult.Success ? CommandStatus.Completed :
+                result == CommandExecutionResult.Failed ? CommandStatus.Failed :
+                throw new NotImplementedException(
+                    $"{nameof(CommandExecutionResult)}.{result}");
 
             // Mark the task as completed
-            cmdLog.UpdateTaskStatus(nextTask.Id, CommandStatus.Completed);
+            cmdLog.UpdateTaskStatus(nextTask.Id, status);
         }
         catch (Exception ex)
         {
